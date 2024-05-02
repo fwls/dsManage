@@ -2,6 +2,7 @@
   <div class="sliderBar">
     <n-menu :options="menuOptions" @update:value="handleUpdateValue" />
   </div>
+
 </template>
 
 <script setup>
@@ -59,6 +60,20 @@ const menuOptions = [
     icon: renderIcon(HomeIcon),
   },
   {
+    label: () =>
+      h(
+        RouterLink,
+        {
+          to: {
+            name: "dataSource",
+          },
+        },
+        { default: () => "数据集" }
+      ),
+    key: "go-data-set",
+    icon: renderIcon(HomeIcon),
+  },
+  {
     label: "饮品",
     key: "beverage",
     icon: renderIcon(WineIcon),
@@ -79,8 +94,9 @@ const handleUpdateValue = (key, item) => {
 
 <style lang="scss">
 .sliderBar {
-
   height: 100vh;
+  border-right: 1px solid rgb(33 32 44 / 16%);
+  transition: background-color .3s var(--n-bezier);
 }
 .n-menu {
   height: 100%;

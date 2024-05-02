@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import mainDashboard from '@/views/main/dashboard/index.vue';
 import mainLayout from '@/views/main/layout/index.vue';
+import { useRouter, useRoute} from "vue-router";
+
+const vrouter = useRouter()
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,7 +22,16 @@ const router = createRouter({
       path: "/main",
       name: "main",
       component: mainLayout,
-      redirect: "dashboard",
+      redirect: "/main/dashboard",
+      beforeEnter: (to, from) => {
+        // reject the navigation
+        const token = localStorage.getItem("token");
+
+        if(!token){
+          window.location.href = '/main/login'
+        }
+        // return false
+      },
       children: [
         {
           path: "dashboard",
@@ -32,6 +44,11 @@ const router = createRouter({
           component: () => import('@/views/main/dataSource/index.vue')
         },
       ],
+    },
+    {
+      path: "/main/login",
+      name: "mainLogin",
+      component: () => import('@/views/main/auth/login.vue')
     },
     // {
     //   path: '/about',

@@ -43,6 +43,11 @@ const router = createRouter({
           name: "dataSource",
           component: () => import('@/views/main/dataSource/index.vue')
         },
+        {
+          path: "dataSet",
+          name: "dataSet",
+          component: () => import('@/views/main/dataSet/index.vue')
+        },
       ],
     },
     {

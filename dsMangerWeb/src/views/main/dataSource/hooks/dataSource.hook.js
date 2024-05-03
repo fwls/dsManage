@@ -1,5 +1,5 @@
 import {ref, h} from 'vue'
-import { NButton } from "naive-ui";
+import {NButton, NTag} from "naive-ui";
 
 export const useDataSourceHook = () => {
     const pagination = ref(true)
@@ -17,11 +17,41 @@ export const useDataSourceHook = () => {
             key: "type"
         },
         {
+            title: "连通性",
+            key: "conn_status",
+            render(row) {
+                if (row.conn_status == true) {
+                    return h(
+                        NTag,
+                        {
+                            type: "success"
+                        },
+                        {default: () => "正常"}
+                    );
+                } else if (row.conn_status == false) {
+                    return h(
+                        NTag,
+                        {
+                            type: "error"
+                        },
+                        {default: () => "错误"}
+                    );
+                } else {
+                    return h(
+                        NTag,
+                        {},
+                        {default: () => "未知"}
+                    );
+                }
+
+            }
+        },
+        {
             title: "创建时间",
             key: "created_at"
         },
         {
-            title: "Action",
+            title: "操作",
             key: "actions",
             render(row) {
                 return h(
@@ -32,24 +62,24 @@ export const useDataSourceHook = () => {
                         size: "small",
                         onClick: () => play(row)
                     },
-                    { default: () => "编辑" }
+                    {default: () => "编辑"}
                 );
             }
         }
     ];
 
     const data = [
-        { no: 1, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL" },
-        { no: 2, name: "111Mysql数据库", created_at: "4:18", type: "POSTGRESQL" },
-        { no: 3, name: "111Mysql数据库", created_at: "4:18", type: "javascript" },
-        { no: 4, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL" },
-        { no: 5, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL" },
-        { no: 6, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL" },
-        { no: 7, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL" },
-        { no: 8, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL" },
-        { no: 9, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL" },
-        { no: 10, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL" },
-        { no: 11, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL" },
+        {no: 1, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL", conn_status: true},
+        {no: 2, name: "111Mysql数据库", created_at: "4:18", type: "POSTGRESQL", conn_status: null},
+        {no: 3, name: "111Mysql数据库", created_at: "4:18", type: "javascript", conn_status: true},
+        {no: 4, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL", conn_status: false},
+        {no: 5, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL", conn_status: false},
+        {no: 6, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL", conn_status: false},
+        {no: 7, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL", conn_status: true},
+        {no: 8, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL", conn_status: true},
+        {no: 9, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL", conn_status: true},
+        {no: 10, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL", conn_status: true},
+        {no: 11, name: "111Mysql数据库", created_at: "4:18", type: "MYSQL", conn_status: true},
     ];
 
     const options = [

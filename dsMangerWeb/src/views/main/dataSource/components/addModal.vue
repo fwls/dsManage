@@ -29,6 +29,7 @@
         </div>
         <template #action>
             <n-flex>
+              <n-button @click="handleTestConn">测试连接</n-button>
                 <n-button @click="handleSubmit">提交</n-button>
                 <n-button @click="close">关闭</n-button>
             </n-flex>
@@ -58,6 +59,10 @@ const handleSubmit = () => {
     setTimeout(() => {
         close()
     })
+}
+
+const handleTestConn = () => {
+  window['$message'].success("测试成功")
 }
 
 defineExpose({ open, close })

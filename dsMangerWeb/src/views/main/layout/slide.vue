@@ -65,7 +65,7 @@ const menuOptions = [
         RouterLink,
         {
           to: {
-            name: "dataSource",
+            name: "dataSet",
           },
         },
         { default: () => "数据集" }

@@ -1,14 +1,8 @@
-import path from 'path'
+const sutando = require("./database");
+const { secretKey, expireTime } = require("./jwt");
 
-const __dirname = path.resolve();
-// const dbConfig =  'postgres://user:pass@example.com:5432/dbname'
-// const dbConfig =  'sqlite::' + path.join(__dirname, 'database.db')
-const dbConfig =  'sqlite:./database.db' 
-const secretKey = `dwafawwg`
-const expiresIn = '30d'
-
-export {
-    dbConfig,
-    secretKey,
-    expiresIn
-}
+module.exports = {
+  sutando,
+  secretKey,
+  expireTime
+};

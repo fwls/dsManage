@@ -1,2 +1,5 @@
 node_modules
-public/upload
+static/uploads
+*.db
+*.sqlite
+package-lock.json

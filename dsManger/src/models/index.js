@@ -1,7 +1,5 @@
-import User from "./User.js";
-import DataSource from './DataSource.js'
+const User = require('./user')
 
-export {
-    User,
-    DataSource
+module.exports = {
+    User
 }

@@ -1,33 +1,28 @@
-import express from 'express'
-import { secretKey } from './config/index.js'
+const { serve } = require("@hono/node-server");
+const { serveStatic } = require("@hono/node-server/serve-static");
+const { logger } = require("hono/logger");
+const { prettyJSON } = require("hono/pretty-json");
+const { Hono } = require("hono");
 
-const app = express();
 
-app.get('/', (req, res) => {
-    res.send('Hello, Express!');
-});
+const app = new Hono();
 
-app.use(
-    expressjwt({
-        secret: secretKey,
-        algorithms: ["HS256"],
-    }).unless({ path: [/^\/api\//] })
-);
+// app.use(logger());
+// app.use(prettyJSON());
 
-import indexController from './controllers/index.js'
-import authApiV1Controller from './controllers/api/v1/auth.js'
+app.use("/static/*", serveStatic({ root: "./" }));
 
-app.use("/index", indexController);
-app.use("/api/v1/auth", authApiV1Controller);
+app.get("/", (c) => c.text("Hello Node.js!"));
 
-app.use((err, req, res, next) => {
-    if (err.name === "UnauthorizedError") {
-        return res.send({ status: 401, message: "无效的 token" });
-    }
-    res.send({ status: 500, message: "未知的错误" });
-});
+app.notFound((c) => c.json({ message: "Not Found", status: false }, 404));
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Express server running on port ${PORT}`);
+const api = require("./controllers/api/index");
+const authApi = require("./controllers/api/auth");
+
+app.route("/api", api);
+app.route("/api/auth", authApi);
+
+serve({
+  fetch: app.fetch,
+  port: 8787,
 });

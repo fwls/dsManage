@@ -18,9 +18,11 @@ app.notFound((c) => c.json({ message: "Not Found", status: false }, 404));
 
 const api = require("./controllers/api/index");
 const authApi = require("./controllers/api/auth");
+const dsV1Api = require("./controllers/api/v1/ds");
 
 app.route("/api", api);
 app.route("/api/auth", authApi);
+app.route('/api/v1/ds', dsV1Api)
 
 serve({
   fetch: app.fetch,

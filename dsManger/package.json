@@ -1,8 +1,9 @@
 {
   "scripts": {
-    "migrate": "node src/sutando/migrate.js",
-    "migrate:rollback": "node src/sutando/migrate.js rollback",
-    "start": "nodemon src/index.js",
+    "migrate": "sutando migrate:run",
+    "migrate:rollback": "sutando migrate:rollback",
+    "migrate:status": "sutando migrate:status",
+    "dev": "nodemon src/index.js",
     "seed": "node src/sutando/seed.js"
   },
   "dependencies": {

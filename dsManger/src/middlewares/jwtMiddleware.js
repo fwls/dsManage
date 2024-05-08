@@ -2,9 +2,12 @@ const { verify } = require("hono/jwt");
 const config = require("../config");
 
 const jwtMiddleware = async (c, next) => {
-  const token = c.req.header("authorization").replace("Bearer ", "");
-
+  const token = c.req.header("authorization") || undefined;
+  if (token == undefined) {
+    return c.json({ msg: "Unauthorized", code: 401 });
+  }
   try {
+    token = token.replace("Bearer ", "");
     const verifyToken = await verify(token, config.secretKey);
     c.userInfo = verifyToken;
     console.log(c.userInfo);

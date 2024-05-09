@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config/jwtConfig');
 
-const verifyToken = (req, res, next) => {
+const verifyToken = async (req, res, next) => {
     const token = req.headers['authorization'];
 
     if (!token) {
@@ -17,7 +17,20 @@ const verifyToken = (req, res, next) => {
     });
 }
 
+const errorHandler = async (err, req, res, next) => {
+    // Log the error
+    console.error(err.message);
+
+    // Set the response status code and message
+    res.status(500).json({
+        error: err.message,
+        message: 'Something went wrong',
+        code: 500
+    });
+}
+
 
 module.exports = {
-    verifyToken
+    verifyToken,
+    errorHandler
 }

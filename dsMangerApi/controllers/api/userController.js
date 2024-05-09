@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const knex = require('../config/db');
+const knex = require('../../config/db');
 
 router.get('/users', (req, res) => {
   // 获取所有用户的逻辑

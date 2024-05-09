@@ -2,28 +2,28 @@ const express = require("express");
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { secret } = require("../config/jwtConfig");
-const knex = require("../config/db");
+const { secret } = require("../../config/jwtConfig");
+const knex = require("../../config/db");
 
 router.post("/login", async (req, res) => {
   // 实现登录逻辑，验证用户信息等
   const { username, password } = req.body;
 
   if (!username || !password) {
-    return res.status(400).json({ message: "请提供用户名和密码" });
+    return res.status(400).json({ msg: "请提供用户名和密码", code: 500 });
   }
 
   try {
     const user = await knex("users").where("username", username).first();
 
     if (!user || !user.password || !bcrypt.compareSync(password, user.password)) {
-      return res.status(401).json({ message: "无效的用户名或密码" });
+      return res.status(401).json({ msg: "无效的用户名或密码", code: 500 });
     }
 
-    const token = jwt.sign({ id: user.id }, secret, { expiresIn: "1h" });
-    return res.status(200).json({ token });
+    const token = jwt.sign({ id: user.id }, secret, { expiresIn: "30d" });
+    return res.status(200).json({ token, code: 200, msg: "登录成功" });
   } catch (err) {
-    return res.status(500).json({ message: "服务器错误" });
+    return res.status(500).json({ msg: "服务器错误", code: 500 });
   }
 });
 

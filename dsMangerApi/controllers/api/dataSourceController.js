@@ -37,7 +37,7 @@ router.get('/:id', verifyToken, async (req, res) => {
 });
 
 router.post('/add', verifyToken, async (req, res) => {
-    const { name, type, url, username, password, ext, database, port} = req.body
+    const { name, type, url, username, password, ext, database, port, charset} = req.body
     const [id] = await knex('data_sources').insert({
         name,
         type,
@@ -46,7 +46,8 @@ router.post('/add', verifyToken, async (req, res) => {
         password,
         database,
         ext,
-        port
+        port,
+        charset
     });
     res.json({
         data: id,
@@ -56,7 +57,7 @@ router.post('/add', verifyToken, async (req, res) => {
 });
 
 router.post('/update', verifyToken, async (req, res) => {
-    const { name, type, url, username, password, ext, database, port} = req.body
+    const { name, type, url, username, password, ext, database, port, charset} = req.body
     await knex('data_sources').where('id', id).update({
         name,
         type,
@@ -64,6 +65,7 @@ router.post('/update', verifyToken, async (req, res) => {
         username,
         password,
         database,
+        charset,
         ext,
         port
     });

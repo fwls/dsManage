@@ -12,6 +12,7 @@ exports.up = function(knex) {
         table.string('port', 6).comment("端口");
         table.string('username');
         table.string('password');
+        table.string('charset').comment("字符集");
         table.string('database').comment("数据库名");
         table.smallint('conn_status').defaultTo(0);
         table.json('ext').comment("扩展字段");

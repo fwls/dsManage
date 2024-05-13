@@ -1,34 +1,40 @@
-// 引入文件
-import axios from 'axios'
+   // src/http/index.js
+   import axios from 'axios';
 
-// 基础配置
-let service = axios.create({
-    // baseURL: baseUrl, // url = base api url + request url
-    withCredentials: true, // send cookies when cross-domain requests
-    timeout: 5000 // request timeout
-})
+   const instance = axios.create({
+    //  baseURL: process.env.VUE_APP_API_URL || 'http://localhost:3000', // API基础URL
+     timeout: 5000, // 请求超时时间
+    //  headers: {'X-Custom-Header': 'foobar'}, // 可选的自定义headers
+   });
 
-let loading;
-// 请求拦截
-service.interceptors.request.use(config => {
+   // 请求拦截器
+   instance.interceptors.request.use(
+     config => {
+       // 比如在这里添加token
+       const token = localStorage.getItem('token');
+       if (token) {
+         config.headers.Authorization = `${token}`;
+       }
+       return config;
+     },
+     error => {
+       console.error('Request Error:', error);
+       Promise.reject(error);
+     }
+   );
 
-    //config.headers['Authorization'] = sessionStorage.getItem('token')
-    return config
-},error =>{
-    console.log(error);
-    return Promise.reject(error)
-})
+   // 响应拦截器
+   instance.interceptors.response.use(
+     response => response,
+     error => {
+       console.error('Response Error:', error);
+      //  if (error.response.status === 401) {
+      //    // 处理未授权情况
+      //    window["$message"].error("账号或密码错误");
+      //  }
+      window["$message"].error(error.response.data.msg);
+       return Promise.reject(error);
+     }
+   );
 
-
-// 响应拦截
-service.interceptors.response.use(res =>{
-
-    return Promise.resolve(res)
-},error =>{
-
-    console.log('err'+error);
-    return Promise.reject(error)
-})
-
-// 抛出
-export default service
+   export default instance;

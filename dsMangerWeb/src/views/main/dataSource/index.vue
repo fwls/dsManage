@@ -6,7 +6,7 @@
                     <n-input v-model:value="formValue.name" placeholder="输入名称" />
                 </n-form-item>
                 <n-form-item label="类型">
-                    <n-select v-model:value="formValue.value" :options="options" />
+                    <n-select v-model:value="formValue.value" :options="options" style="width: 150px;"/>
                 </n-form-item>
                 <n-form-item>
                     <n-button attr-type="button">
@@ -34,14 +34,14 @@ import addModal from './components/addModal.vue';
 import { useDataSourceHook } from './hooks/dataSource.hook'
 import tableComponent from './components/table.vue'
 
-const { options } = useDataSourceHook()
+const { options, addModalRef} = useDataSourceHook()
 
 const formValue = ref({
     name: '',
     value: ''
 })
 
-const addModalRef = ref(null)
+
 
 const openAddModal = () => {
     addModalRef.value?.open()
@@ -50,7 +50,5 @@ const openAddModal = () => {
 </script>
 
 <style>
-.n-base-selection {
-    width: 180px;
-}
+
 </style>

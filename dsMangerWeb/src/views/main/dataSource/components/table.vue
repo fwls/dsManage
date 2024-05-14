@@ -6,14 +6,15 @@
     :bordered="false"
   />
 
-  <add-modal ref="addModalRef" />
+  <add-modal ref="addModalRef" @fresh="getDataList" />
 </template>
 
 <script setup>
 import { onMounted, h } from "vue";
+import { deleteDataSource } from "@/api";
 import { useDataSourceHook } from "../hooks/dataSource.hook";
 import { NButton, NTag } from "naive-ui";
-import addModal from './addModal.vue';
+import addModal from "./addModal.vue";
 
 const { data, pagination, getDataList, addModalRef } = useDataSourceHook();
 
@@ -103,14 +104,28 @@ const handleOpenAddModal = (value) => {
 };
 
 const handleDel = async (row) => {
-  const res = await deleteDataSource({ id: row.id });
-  if (res.data.code == 200) {
-    getDataList();
-    window["$message"].error("删除成功");
-  }
+  window["$dialog"].warning({
+    title: "警告",
+    content: "确定要删除吗？",
+    positiveText: "确定",
+    negativeText: "取消",
+    onPositiveClick: async () => {
+      const res = await deleteDataSource({ id: row.id });
+      if (res.code == 200) {
+        getDataList();
+        window["$message"].success("删除成功");
+      }
+    },
+  });
+};
+
+const search = async (value) => {
+    getDataList(value);
 };
 
 onMounted(() => {
   getDataList();
 });
+
+defineExpose({ search });
 </script>

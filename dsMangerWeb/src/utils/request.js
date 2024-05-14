@@ -1,40 +1,51 @@
-   // src/http/index.js
-   import axios from 'axios';
+// src/utils/axiosInstance.js
+import axios from 'axios';
 
-   const instance = axios.create({
-    //  baseURL: process.env.VUE_APP_API_URL || 'http://localhost:3000', // API基础URL
-     timeout: 5000, // 请求超时时间
-    //  headers: {'X-Custom-Header': 'foobar'}, // 可选的自定义headers
-   });
+// 创建axios实例
+const request  = axios.create({
+  // baseURL: process.env.VUE_APP_BASE_API, // api的base_url
+  timeout: 5000, // 请求超时时间
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
+    // 其他默认请求头...
+  },
+});
 
-   // 请求拦截器
-   instance.interceptors.request.use(
-     config => {
-       // 比如在这里添加token
-       const token = localStorage.getItem('token');
-       if (token) {
-         config.headers.Authorization = `${token}`;
-       }
-       return config;
-     },
-     error => {
-       console.error('Request Error:', error);
-       Promise.reject(error);
-     }
-   );
+// 请求拦截器
+request.interceptors.request.use(
+  (config) => {
+    // 在发送请求之前做些什么，例如添加token
+    // if (store.getters.token) {
+    //   config.headers.Authorization = `Bearer ${store.getters.token}`;
+    // }
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    // 对请求错误做些什么
+    return Promise.reject(error);
+  }
+);
 
-   // 响应拦截器
-   instance.interceptors.response.use(
-     response => response,
-     error => {
-       console.error('Response Error:', error);
-      //  if (error.response.status === 401) {
-      //    // 处理未授权情况
-      //    window["$message"].error("账号或密码错误");
-      //  }
-      window["$message"].error(error.response.data.msg);
-       return Promise.reject(error);
-     }
-   );
+// 响应拦截器
+request.interceptors.response.use(
+  (response) => {
+    const res = response.data;
+    // 根据后端返回的状态码进行处理，这里只是一个示例
+    if (res.code !== 200) {
+      window['$message'].error(res.msg || 'Error');
+      return Promise.reject(new Error(res.msg || 'Error'));
+    }
+    return res;
+  },
+  (error) => {
+    console.log('err' + error); // for debug
+    window['$message'].error(error.msg);
+    return Promise.reject(error);
+  }
+);
 
-   export default instance;
+export default request;

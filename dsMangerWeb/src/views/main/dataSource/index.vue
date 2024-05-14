@@ -6,11 +6,11 @@
                     <n-input v-model:value="formValue.name" placeholder="输入名称" />
                 </n-form-item>
                 <n-form-item label="类型">
-                    <n-select v-model:value="formValue.value" :options="options" style="width: 150px;"/>
+                    <n-select v-model:value="formValue.type" :options="options" style="width: 150px;"/>
                 </n-form-item>
                 <n-form-item>
-                    <n-button attr-type="button">
-                        验证
+                    <n-button attr-type="button" @click="handleSearch">
+                        搜索
                     </n-button>
                 </n-form-item>
             </n-form>
@@ -23,7 +23,7 @@
     </n-flex>
 
     <div>
-        <table-component />
+        <table-component ref="tableRef" />
     </div>
     <add-modal ref="addModalRef" />
 </template>
@@ -36,12 +36,17 @@ import tableComponent from './components/table.vue'
 
 const { options, addModalRef} = useDataSourceHook()
 
+
+const tableRef = ref(null)
+
 const formValue = ref({
     name: '',
     value: ''
 })
 
-
+const handleSearch = () => {
+    tableRef.value?.search(formValue.value)
+}
 
 const openAddModal = () => {
     addModalRef.value?.open()

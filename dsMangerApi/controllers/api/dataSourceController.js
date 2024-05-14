@@ -1,79 +1,125 @@
 const express = require('express');
+const { pick } = require('lodash');
 const router = express.Router();
 const { verifyToken } = require('../../utils/index');
 const knex = require('../../config/db');
 
+// 获取数据源
 router.get('/list', verifyToken, async (req, res) => {
-    // 根据分页生成data_sources表的查询逻辑,并使用json返回
-    const page = req.query.page || 1;
-    const pageSize = req.query.pageSize || 10;
+    try {
 
-    const offset = (page - 1) * pageSize
+        const query = knex('data_sources').select("id", "name", "type", "conn_status", "created_at");
+        const { name, type } = req.query;
+        if (name) {
+            query.where('name', 'like', `%${name}%`);
+        }
+        if (type) {
+            query.where('type', type);
+        }
+        const dataSources = await query.offset((req.query.page || 1) - 1).limit(req.query.pageSize || 10);
+        const totalCount = await knex('data_sources').count('id as count').where(name ? { name: `%${name}%` } : {}).where(type ? { type } : {});
 
-    const dataSources = await knex('data_sources')
-        .select("id", "name", "type", "conn_status", "created_at")
-        .offset(offset)
-        .limit(pageSize);
-    const totalCount = await knex('data_sources').count('id as count');
-
-    res.json({
-        data: dataSources,
-        page: parseInt(page),
-        pageSize: parseInt(pageSize),
-        total: parseInt(totalCount[0].count),
-        msg: "success",
-        code: 200
-    });
+        res.json({
+            data: dataSources,
+            page: parseInt(req.query.page),
+            pageSize: parseInt(req.query.pageSize),
+            total: parseInt(totalCount[0].count),
+            msg: "success",
+            code: 200
+        });
+    } catch (error) {
+        res.json({
+            data: null,
+            msg: error.message,
+            code: 500
+        });
+    }
 });
 
 router.get('/:id', verifyToken, async (req, res) => {
-    const id = req.params.id;
-    const dataSource = await knex('data_sources').where('id', id).first();
-    res.json({
-        data: dataSource,
-        msg: "success",
-        code: 200
-    });
+    try {
+        const id = req.params.id;
+        const dataSource = await knex('data_sources').where('id', id).first();
+        res.json({
+            data: dataSource,
+            msg: "success",
+            code: 200
+        });
+    } catch (error) {
+        res.json({
+            data: null,
+            msg: error.message,
+            code: 500
+        });
+    }
 });
 
 router.post('/add', verifyToken, async (req, res) => {
-    const { name, type, url, username, password, ext, database, port, charset} = req.body
-    const [id] = await knex('data_sources').insert({
-        name,
-        type,
-        url,
-        username,
-        password,
-        database,
-        ext,
-        port,
-        charset
-    });
+    const data = {
+        name: req.body.name,
+        type: req.body.type,
+        url: req.body.url,
+        username: req.body.username,
+        password: req.body.password,
+        database: req.body.database,
+        ext: req.body.ext,
+        port: req.body.port,
+        charset: req.body.charset,
+    }
+    try {
+        const [id] = await knex('data_sources').insert(data);
+        res.json({
+            data: id,
+            msg: "success",
+            code: 200
+        });
+    } catch (error) {
+        res.json({
+            data: null,
+            msg: error.message,
+            code: 500
+        });
+    }
+});
+
+router.post('/edit', verifyToken, async (req, res) => {
+    const { id } = req.body
+    const updateFields = ['name', 'type', 'url', 'username', 'password', 'database', 'charset', 'ext', 'port']
+    const data = await knex('data_sources').where('id', id).update(
+        pick(req.body, updateFields),
+        '*'
+    ).catch(error => {
+        res.json({
+            data: null,
+            msg: error.message,
+            code: 500
+        });
+    })
+
     res.json({
-        data: id,
+        data,
         msg: "success",
         code: 200
     });
 });
 
-router.post('/update', verifyToken, async (req, res) => {
-    const { name, type, url, username, password, ext, database, port, charset} = req.body
-    await knex('data_sources').where('id', id).update({
-        name,
-        type,
-        url,
-        username,
-        password,
-        database,
-        charset,
-        ext,
-        port
-    });
-    res.json({
-        data: null,
-        msg: "success",
-        code: 200
-    });
+
+router.post('/delete', verifyToken, async (req, res) => {
+    try {
+        const { id } = req.body
+        await knex('data_sources').where('id', id).delete()
+        res.json({
+            data: null,
+            msg: "success",
+            code: 200
+        });
+    } catch (error) {
+        res.json({
+            data: null,
+            msg: error.message,
+            code: 500
+        });
+    }
 });
 
 module.exports = router;

@@ -49,12 +49,12 @@ const handleLogin = async () => {
 
   const res = await loginApi(model.value);
   
-  if (!res || res.data.code != 200) {
+  if (!res || res.code != 200) {
     window["$message"].error("账号或密码错误");
     return false;
   } else {
     window["$message"].success("登录成功");
-    localStorage.setItem("token", res.data.token);
+    localStorage.setItem("token", res.token);
     router.push("/main/dashboard");
   }
 };

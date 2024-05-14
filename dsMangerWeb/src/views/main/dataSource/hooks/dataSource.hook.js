@@ -6,8 +6,8 @@ export const useDataSourceHook = () => {
   const addModalRef = ref(null);
 
   const pagination = reactive({
-    page: 2,
-    pageSize: 5,
+    page: 1,
+    pageSize: 10,
     showSizePicker: true,
     pageSizes: [10, 20, 50],
     onChange: (page) => {
@@ -39,10 +39,19 @@ export const useDataSourceHook = () => {
     },
   ];
 
-  const getDataList = async () => {
-    const res = await getDataSourceList({});
-    if (res && res.data.code == 200) {
-      data.value = res.data.data;
+  const getDataList = async (value) => {
+    let res = null;
+    const params = {
+      page: pagination.page,
+      pageSize: pagination.pageSize
+    }
+    if(value){
+      params.type = value.type
+      params.name = value.name
+    }
+    res = await getDataSourceList(params);
+    if (res && res.code == 200) {
+      data.value = res.data;
     }
   };
 

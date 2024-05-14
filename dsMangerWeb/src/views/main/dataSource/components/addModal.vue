@@ -27,7 +27,7 @@
           <n-input v-model:value="model.url" placeholder="数据源地址" />
         </n-form-item>
         <n-form-item label="端口" path="port">
-          <n-input-number v-model:value="model.port" placeholder="数据源端口" />
+          <n-input v-model:value="model.port" placeholder="数据源端口" />
         </n-form-item>
         <n-form-item label="用户名" path="username">
           <n-input v-model:value="model.username" placeholder="数据源账户" />
@@ -35,8 +35,8 @@
         <n-form-item label="密码" path="password">
           <n-input v-model:value="model.password" placeholder="数据源密码" />
         </n-form-item>
-        <n-form-item label="数据库名称" path="username">
-          <n-input v-model:value="model.username" placeholder="数据库名称" />
+        <n-form-item label="数据库名称" path="database">
+          <n-input v-model:value="model.database" placeholder="数据库名称" />
         </n-form-item>
         <n-form-item label="字符集" path="charset">
           <n-input
@@ -58,23 +58,25 @@
 
 <script setup>
 import { ref } from "vue";
-import { addDataSource,getDataSourceDetail } from "@/api";
+import { addDataSource, editDataSource, getDataSourceDetail } from "@/api";
 import { useDataSourceHook } from "../hooks/dataSource.hook";
 
 const { options } = useDataSourceHook();
+
+const emit = defineEmits(["fresh"]);
 
 const showModal = ref(false);
 const model = ref({});
 
 const open = async (value) => {
   showModal.value = true;
-  if(!value){
-    model.value = {}
-  }else{
-    model.value = value
-    const res = await getDataSourceDetail({id:value.id})
-    if(res && res.data.code == 200){
-      model.value = res.data.data
+  if (!value) {
+    model.value = {};
+  } else {
+    model.value = value;
+    const res = await getDataSourceDetail({ id: value.id });
+    if (res && res.code == 200) {
+      model.value = res.data;
     }
   }
 };
@@ -84,15 +86,19 @@ const close = () => {
 };
 
 const handleSubmit = async () => {
-  const res = await addDataSource(model.value);
-  if(res && res.code == 200){
-    window["$message"].success("提交成功");
-  }else{
-    window["$message"].error(res.msg);
+  let res = null;
+  if (model.value.id) {
+    res = await editDataSource(model.value);
+    emit("fresh");
+  } else {
+    res = await addDataSource(model.value);
   }
-  setTimeout(() => {
-    close();
-  });
+  if (res && res.code == 200) {
+    window["$message"].success(res.msg);
+    setTimeout(() => {
+      close();
+    });
+  }
 };
 
 const handleTestConn = () => {

@@ -40,7 +40,7 @@ export async function getDataSourceList(data) {
   return request({
     url: '/api/datasource/list',
     method: 'get',
-    data
+    params: data
   })
 }
 

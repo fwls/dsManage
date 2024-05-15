@@ -10,10 +10,11 @@
       <div class="item">
         欢迎，管理员！
       </div>
-      <div class="item">
+      <div class="item" style="">
         <n-dropdown trigger="hover" :options="options" @select="handleSelect">
           <n-avatar :style="{
             color: 'yellow',
+            marginTop: '10px',
             backgroundColor: 'red',
           }">
             M

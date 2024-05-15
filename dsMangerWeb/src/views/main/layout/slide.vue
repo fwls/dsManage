@@ -2,7 +2,6 @@
   <div class="sliderBar">
     <n-menu :options="menuOptions" @update:value="handleUpdateValue" />
   </div>
-
 </template>
 
 <script setup>
@@ -10,9 +9,10 @@ import { defineComponent, h } from "vue";
 import { NIcon, useMessage } from "naive-ui";
 import { RouterLink } from "vue-router";
 import {
-  BookOutline as BookIcon,
-  PersonOutline as PersonIcon,
-  WineOutline as WineIcon,
+  BarChart as BarChartIcon,
+  BookmarksOutline as BookmarksOutlineIcon,
+  BookOutline as BookOutlineIcon,
+  DocumentsOutline as DocumentsOutlineIcon,
   HomeOutline as HomeIcon,
 } from "@vicons/ionicons5";
 
@@ -45,38 +45,60 @@ const menuOptions = [
       },
     },
   },
+
   {
-    label: () =>
-      h(
-        RouterLink,
-        {
-          to: {
-            name: "dataSource",
-          },
-        },
-        { default: () => "数据源" }
-      ),
-    key: "go-data-source",
-    icon: renderIcon(HomeIcon),
-  },
-  {
-    label: () =>
-      h(
-        RouterLink,
-        {
-          to: {
-            name: "dataSet",
-          },
-        },
-        { default: () => "数据集" }
-      ),
-    key: "go-data-set",
-    icon: renderIcon(HomeIcon),
+    label: "数据",
+    key: "dataIndex",
+    icon: renderIcon(BarChartIcon),
+    children: [
+      {
+        label: () =>
+          h(
+            RouterLink,
+            {
+              to: {
+                name: "dataSource",
+              },
+            },
+            { default: () => "数据源" }
+          ),
+        key: "go-data-source",
+        icon: renderIcon(BookmarksOutlineIcon),
+      },
+      {
+        label: () =>
+          h(
+            RouterLink,
+            {
+              to: {
+                name: "dataSet",
+              },
+            },
+            { default: () => "数据集" }
+          ),
+        key: "go-data-set",
+        icon: renderIcon(BookOutlineIcon),
+      },
+      {
+        label: () =>
+          h(
+            RouterLink,
+            {
+              to: {
+                name: "dataChannel",
+              },
+            },
+            { default: () => "数据频道" }
+          ),
+        key: "go-data-channel",
+        icon: renderIcon(DocumentsOutlineIcon),
+      },
+    ],
   },
   {
     label: "饮品",
     key: "beverage",
-    icon: renderIcon(WineIcon),
+    icon: renderIcon(BarChartIcon),
     children: [
       {
         label: "威士忌",
@@ -92,18 +114,18 @@ const handleUpdateValue = (key, item) => {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .sliderBar {
   height: 100vh;
   border-right: 1px solid rgb(33 32 44 / 16%);
-  transition: background-color .3s var(--n-bezier);
+  transition: background-color 0.3s var(--n-bezier);
 }
 .n-menu {
   height: 100%;
 }
 
-.n-menu .n-menu-item-content .n-menu-item-content__icon ,.n-menu .n-menu-item-content .n-menu-item-content-header a {
-
+.n-menu .n-menu-item-content .n-menu-item-content__icon,
+.n-menu .n-menu-item-content .n-menu-item-content-header a {
 }
 .n-layout-sider-scroll-container {
   padding: 0 !important;

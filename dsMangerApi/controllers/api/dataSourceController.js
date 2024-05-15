@@ -16,8 +16,9 @@ router.get('/list', verifyToken, async (req, res) => {
         if (type) {
             query.where('type', type);
         }
-        const dataSources = await query.offset((req.query.page || 1) - 1).limit(req.query.pageSize || 10);
-        const totalCount = await knex('data_sources').count('id as count').where(name ? { name: `%${name}%` } : {}).where(type ? { type } : {});
+        const dataSources = await query.whereNull('deleted_at').offset((req.query.page || 1) - 1).limit(req.query.pageSize || 10);
+        const totalCount = await knex('data_sources').whereNull('deleted_at').count('id as count')
+            .where(name ? { name: `%${name}%` } : {}).where(type ? { type } : {});
 
         res.json({
             data: dataSources,
@@ -107,7 +108,9 @@ router.post('/edit', verifyToken, async (req, res) => {
 router.post('/delete', verifyToken, async (req, res) => {
     try {
         const { id } = req.body
-        await knex('data_sources').where('id', id).delete()
+        await knex('data_sources').where('id', id).update({
+            deleted_at: Date()
+        })
         res.json({
             data: null,
             msg: "success",

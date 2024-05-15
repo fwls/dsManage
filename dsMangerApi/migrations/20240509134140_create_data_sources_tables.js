@@ -15,7 +15,10 @@ exports.up = function(knex) {
         table.string('charset').comment("字符集");
         table.string('database').comment("数据库名");
         table.smallint('conn_status').defaultTo(0);
+        table.timestamp('deleted_at');
+        table.smallint('status').defaultTo(0);
         table.json('ext').comment("扩展字段");
+        
         table.timestamps(true, true);
       }),
       // 添加其他表的定义

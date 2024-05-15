@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
-import mainDashboard from '@/views/main/dashboard/index.vue';
-import mainLayout from '@/views/main/layout/index.vue';
-import { useRouter, useRoute} from "vue-router";
+import mainDashboard from "@/views/main/dashboard/index.vue";
+import mainLayout from "@/views/main/layout/index.vue";
+import { useRouter, useRoute } from "vue-router";
 
-const vrouter = useRouter()
+const vrouter = useRouter();
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,33 +27,63 @@ const router = createRouter({
         // reject the navigation
         const token = localStorage.getItem("token");
 
-        if(!token){
-          window.location.href = '/main/login'
+        if (!token) {
+          window.location.href = "/main/login";
         }
         // return false
       },
       children: [
         {
           path: "dashboard",
-          name: "dashboard",
-          component: mainDashboard
+          name: "mainDashboardIndex",
+          component: mainDashboard,
         },
         {
-          path: "dataSource",
+          path: "data/dataSource",
           name: "dataSource",
-          component: () => import('@/views/main/dataSource/index.vue')
+          component: () => import("@/views/main/data/dataSource/index.vue"),
         },
         {
-          path: "dataSet",
+          path: "data/dataSet",
           name: "dataSet",
-          component: () => import('@/views/main/dataSet/index.vue')
+          component: () => import("@/views/main/data/dataSet/index.vue"),
+        },
+        {
+          path: "data/dataSet/add",
+          name: "dataSetAdd",
+          component: () => import("@/views/main/data/dataSet/add.vue"),
+        },
+        {
+          path: "data/dataChannel",
+          name: "dataChannel",
+          component: () => import("@/views/main/data/dataChannel/index.vue"),
+          children: [
+            {
+              path: "dataChannelSet",
+              name: "dataChannelSet",
+              component: () =>
+                import("@/views/main/data/dataChannel/sets/index.vue"),
+            },
+            {
+              path: "dataChannelSet",
+              name: "dataChannelSet",
+              component: () =>
+                import("@/views/main/data/dataChannel/sets/index.vue"),
+            },
+            {
+              path: "dataChannelInfo",
+              name: "dataChannelInfo",
+              component: () =>
+                import("@/views/main/data/dataChannel/info/index.vue"),
+            },
+          ],
         },
       ],
     },
     {
       path: "/main/login",
       name: "mainLogin",
-      component: () => import('@/views/main/auth/login.vue')
+      component: () => import("@/views/main/auth/login.vue"),
     },
     // {
     //   path: '/about',

@@ -48,19 +48,19 @@ const handleLogin = async () => {
   }
 
   const res = await loginApi(model.value);
-  
+
   if (!res || res.code != 200) {
     window["$message"].error("账号或密码错误");
     return false;
   } else {
     window["$message"].success("登录成功");
     localStorage.setItem("token", res.token);
-    router.push("/main/dashboard");
+    router.push({ name: "mainDashboardIndex" });
   }
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .n-card {
   max-width: 320px;
   margin-left: auto;

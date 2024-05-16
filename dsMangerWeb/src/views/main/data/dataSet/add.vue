@@ -30,7 +30,7 @@
         :label="formValue.type == 'javascript' ? '脚本' : 'SQL'"
         path="content"
       >
-        <monaco-editor
+        <!-- <monaco-editor
           v-model:modelValue="formValue.content"
           v-if="language == 'javascript'"
           :language="`javascript`"
@@ -40,28 +40,21 @@
             lineNumbers: 'on',
             minimap: { enabled: true },
           }"
+        /> -->
+        <monaco-editor
+          v-model:modelValue="formValue.content"
+          v-if="language == 'javascript'"
+          language="javascript"
         />
         <monaco-editor
           v-model:modelValue="formValue.content"
-          v-else-if="language == 'sql'"
-          :language="`sql`"
-          :height="`240px`"
-          :width="`100%`"
-          :editorOptions="{
-            lineNumbers: 'on',
-            minimap: { enabled: true },
-          }"
+          v-if="language == 'json'"
+          language="json"
         />
         <monaco-editor
           v-model:modelValue="formValue.content"
-          v-else-if="language == 'json'"
-          :language="`json`"
-          :height="`240px`"
-          :width="`100%`"
-          :editorOptions="{
-            lineNumbers: 'on',
-            minimap: { enabled: true },
-          }"
+          v-if="language == 'sql'"
+          language="sql"
         />
       </n-form-item>
       <n-form-item label="状态" path="status">
@@ -78,7 +71,8 @@
 
 <script setup>
 import { onMounted, ref, watch } from "vue";
-import { MonacoEditor } from "@/components/Pages/MonacoEditor";
+// import { MonacoEditor } from "@/components/Pages/MonacoEditor";
+import MonacoEditor from "@/components/monacoEditor/index.vue";
 import { useDataSourceHook } from "@/views/main/data/dataSource/hooks/dataSource.hook";
 import { getDataSourceList } from "@/api/dataApi";
 
@@ -91,7 +85,7 @@ const formValue = ref({
   name: "",
   type: "javascript",
   content: "",
-  data_source_id: '',
+  data_source_id: "",
   status: 1,
 });
 
@@ -112,11 +106,6 @@ const rules = {
     message: "请输入数据集名称",
     trigger: "blur",
   },
-  content: {
-    required: true,
-    message: "请输入数据集内容",
-    trigger: "blur",
-  },
   type: {
     required: true,
     message: "请输入数据集类型",
@@ -125,7 +114,10 @@ const rules = {
   data_source_id: {
     required: true,
     message: "请输入数据集所属数据源",
-    trigger: "blur",
+  },
+  content: {
+    required: true,
+    message: "请输入数据集内容",
   },
 };
 
@@ -165,6 +157,8 @@ watch(
     } else if (newValue.includes("sql")) {
       language.value = "sql";
     }
+
+    console.log(newValue, language.value);
   }
 );
 

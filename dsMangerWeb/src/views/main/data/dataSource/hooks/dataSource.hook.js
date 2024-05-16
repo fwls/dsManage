@@ -29,8 +29,8 @@ export const useDataSourceHook = () => {
       value: "",
     },
     {
-      label: "JavaScript",
-      value: "javaScript",
+      label: "javascript",
+      value: "javascript",
     },
     {
       label: "mysql",

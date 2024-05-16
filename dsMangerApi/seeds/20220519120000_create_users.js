@@ -20,7 +20,7 @@ exports.seed = function (knex) {
                 return knex('data_sources').insert([
                     {
                         name: 'mysql1',
-                        type: 'MySQL',
+                        type: 'mysql',
                         url: '127.0.0.1',
                         username: 'root',
                         password: 'root',
@@ -31,7 +31,7 @@ exports.seed = function (knex) {
                     },
                     {
                         name: 'jsEngine1',
-                        type: 'JavaScript',
+                        type: 'javascript',
                         url: null,
                         username: null,
                         password: null,

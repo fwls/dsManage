@@ -129,3 +129,4 @@ onMounted(() => {
 
 defineExpose({ search });
 </script>
+@/api/dataApi

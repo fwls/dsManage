@@ -1,6 +1,6 @@
 import { ref, reactive } from "vue";
 
-import { getDataSourceList } from "@/api";
+import { getDataSourceList } from "@/api/dataApi";
 
 export const useDataSourceHook = () => {
   const addModalRef = ref(null);
@@ -10,14 +10,17 @@ export const useDataSourceHook = () => {
     pageSize: 10,
     showSizePicker: true,
     pageSizes: [10, 20, 50],
-    onChange: (page) => {
+    onChange: async (page) => {
       pagination.page = page;
+      getDataList()
     },
-    onUpdatePageSize: (pageSize) => {
+    onUpdatePageSize: async (pageSize) => {
       pagination.pageSize = pageSize;
       pagination.page = 1;
+      getDataList()
     },
   });
+  
   const data = ref([]);
 
   const options = [
@@ -30,12 +33,12 @@ export const useDataSourceHook = () => {
       value: "javaScript",
     },
     {
-      label: "MySQL",
-      value: "MySQL",
+      label: "mysql",
+      value: "mysql",
     },
     {
-      label: "POSTGRESQL",
-      value: "POSTGRESQL",
+      label: "postgresql",
+      value: "postgresql",
     },
   ];
 

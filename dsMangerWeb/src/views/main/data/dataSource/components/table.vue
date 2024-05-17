@@ -11,7 +11,7 @@
 
 <script setup>
 import { onMounted, h } from "vue";
-import { deleteDataSource } from "@/api";
+import { deleteDataSource } from "@/api/dataApi";
 import { useDataSourceHook } from "../hooks/dataSource.hook";
 import { NButton, NTag } from "naive-ui";
 import addModal from "./addModal.vue";

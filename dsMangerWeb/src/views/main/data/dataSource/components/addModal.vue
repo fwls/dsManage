@@ -58,7 +58,7 @@
 
 <script setup>
 import { ref } from "vue";
-import { addDataSource, editDataSource, getDataSourceDetail } from "@/api";
+import { addDataSource, editDataSource, getDataSourceDetail } from "@/api/dataApi";
 import { useDataSourceHook } from "../hooks/dataSource.hook";
 
 const { options } = useDataSourceHook();

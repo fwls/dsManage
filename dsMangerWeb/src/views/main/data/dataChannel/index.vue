@@ -17,7 +17,7 @@
         </n-form-item>
         <n-form-item>
           <n-button attr-type="button" style="margin-right: 5px;" @click="handleSearch"> 验证 </n-button>
-          <n-button attr-type="button" @click="handleSearch"> 新增 </n-button>
+          <n-button attr-type="button" @click="handleAdd"> 新增 </n-button>
         </n-form-item>
       </n-form>
 
@@ -28,6 +28,8 @@
         :bordered="false"
       />
     </n-card>
+
+    <channel-add-modal  ref="channelAddModalRef"/>
   </div>
 </template>
 
@@ -35,10 +37,12 @@
 import { ref } from "vue";
 import { h } from "vue";
 import { NButton } from "naive-ui";
+import channelAddModal from "./components/channelAddModal.vue";
 
 const formValue = ref({ name: "" });
 const pagination = ref({ pageSize: 10 });
 const data = ref([]);
+const channelAddModalRef = ref(null)
 
 const columns = [
   {
@@ -68,6 +72,10 @@ const columns = [
 ];
 
 const handleSearch = () => {};
+
+const handleAdd = () => {
+  channelAddModalRef.value.open()
+}
 </script>
 
 <style lang="scss" scoped></style>

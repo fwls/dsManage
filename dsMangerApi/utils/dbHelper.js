@@ -1,6 +1,5 @@
 const mysql = require("mysql2");
-const vm = require("vm");
-const util = require("util");
+
 // 封装函数：连接MySQL并执行查询，返回查询结果
 /**
  *
@@ -28,36 +27,35 @@ const util = require("util");
  */
 async function executeQueryWithMysql(connectionConfig, query) {
   // 创建数据库连接
-  // const connection = mysql.createConnection({
-  //   host: host,
-  //   user: user,
-  //   password: password,
-  //   database: database,
-  //   port,
-  //   charset,
-  // });
-  const connection = mysql.createConnection(connectionConfig);
+  const mysql = require("mysql2/promise");
+  const connection = await mysql.createConnection(connectionConfig);
 
   try {
     // 连接到MySQL
     await connection.connect();
 
     // 执行查询
-    const [results, fields] = await new Promise((resolve, reject) => {
-      connection.query(query, (error, rows, columns) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve([rows, columns]);
-        }
-      });
-    });
+    try {
+      const [results, fields] = await connection.query(query);
+
+      console.log(results); // results contains rows returned by server
+      console.log(fields); // fields contains extra meta data about results, if available
+      return {
+        result: results,
+        error: null,
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        result: null,
+        error: err.message,
+      };
+    }
 
     // 关闭数据库连接
     connection.end();
 
     // 返回查询结果
-    return results;
   } catch (error) {
     // 如果连接已建立，则尝试关闭连接
     if (connection.state !== "disconnected") {
@@ -137,8 +135,7 @@ async function executeCodeInSandbox(code) {
   const vm = require("vm");
 
   // 不安全的 JavaScript 代码
-  console.log('code', code)
-  
+
   // 创建一个沙箱环境
   const sandbox = {
     // 可以在这里定义沙箱中的全局变量
@@ -151,17 +148,17 @@ async function executeCodeInSandbox(code) {
     var result = vm.runInNewContext(code, context);
 
     // 输出结果，注意，由于在沙箱中，`process` 不可访问
-    console.log('script',result);
+    console.log("script", result);
     return {
       result,
-      error: null
-    }
+      error: null,
+    };
   } catch (err) {
     //打印超时的 log
     return {
       result,
-      error: err.message
-    }
+      error: err.message,
+    };
   }
 }
 

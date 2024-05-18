@@ -1,11 +1,15 @@
 const express = require('express');
+var morgan = require('morgan');
+
 const { errorHandler } = require('./utils');
 const bodyParser = require("body-parser");
 const routes = require("./controllers/index");
 
 const app = express();
 
+
 // Middleware
+app.use(morgan('short'));
 app.use(express.json());
 app.use(bodyParser.json());
 

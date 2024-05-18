@@ -8,7 +8,7 @@ const knex = require('../../config/db');
 router.get('/list', verifyToken, async (req, res) => {
     try {
 
-        const query = knex('data_sources').select("id", "name", "type", "conn_status", "created_at");
+        const query = knex('data_sources').select("id", "name", "type", "conn_status", "status", "created_at");
         const { name, type } = req.query;
         if (name) {
             query.where('name', 'like', `%${name}%`);
@@ -66,6 +66,9 @@ router.post('/add', verifyToken, async (req, res) => {
         ext: req.body.ext,
         port: req.body.port,
         charset: req.body.charset,
+    }
+    if(data.type == 'javascript'){
+        data.status = 1;
     }
     try {
         const [id] = await knex('data_sources').insert(data);

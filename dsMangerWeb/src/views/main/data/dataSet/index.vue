@@ -40,7 +40,7 @@
 </template>
 
 <script setup>
-import { ref, h, onMounted } from "vue";
+import { ref, h, onMounted, reactive } from "vue";
 import { NButton, NTag } from "naive-ui";
 import { useRouter } from "vue-router";
 import { getDataSetList, testDataSet } from "@/api/dataApi";
@@ -49,7 +49,21 @@ import jsonPreviewResult from "@/views/main/data/components/jsonPreviewResult.vu
 const router = useRouter();
 
 const formValue = ref({ name: "" });
-const pagination = ref({ pageSize: 10 });
+const pagination = reactive({
+  page: 1,
+  pageSize: 10,
+  showSizePicker: true,
+  pageSizes: [10, 20, 30, 50],
+  onChange: async (page) => {
+    pagination.page = page;
+    await getList();
+  },
+  onUpdatePageSize: async (pageSize) => {
+    pagination.pageSize = pageSize;
+    pagination.page = 1;
+    await getList();
+  },
+});
 const data = ref([]);
 const jsonPreviewRef = ref(null);
 const jsonValue = ref({});
@@ -180,8 +194,13 @@ const handleTest = async (row) => {
   }
 };
 
-const getList = () => {
-  getDataSetList().then((res) => {
+const getList = async () => {
+  const params = {
+    pageSize: pagination.pageSize,
+    page: pagination.page,
+    name: formValue.name,
+  };
+  getDataSetList(params).then((res) => {
     if (res) {
       data.value = res.data;
     }

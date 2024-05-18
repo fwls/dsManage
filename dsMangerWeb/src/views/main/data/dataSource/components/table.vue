@@ -10,13 +10,29 @@
 </template>
 
 <script setup>
-import { onMounted, h } from "vue";
+import { onMounted, h, reactive } from "vue";
 import { deleteDataSource } from "@/api/dataApi";
 import { useDataSourceHook } from "../hooks/dataSource.hook";
 import { NButton, NTag } from "naive-ui";
 import addModal from "./addModal.vue";
 
-const { data, pagination, getDataList, addModalRef } = useDataSourceHook();
+const { data,  getDataList, addModalRef } = useDataSourceHook();
+
+const pagination = reactive({
+  page: 1,
+  pageSize: 10,
+  showSizePicker: true,
+  pageSizes: [10, 20, 30, 50],
+  onChange: async (page) => {
+    pagination.page = page;
+    await getDataList();
+  },
+  onUpdatePageSize: async (pageSize) => {
+    pagination.pageSize = pageSize;
+    pagination.page = 1;
+    await getDataList();
+  },
+});
 
 const columns = [
   {
@@ -35,7 +51,7 @@ const columns = [
     title: "连通性",
     key: "conn_status",
     render(row) {
-      if (row.conn_status == true) {
+      if (row.conn_status == 1) {
         return h(
           NTag,
           {
@@ -43,13 +59,39 @@ const columns = [
           },
           { default: () => "正常" }
         );
-      } else if (row.conn_status == false) {
+      } else if (row.conn_status == 0) {
         return h(
           NTag,
           {
             type: "error",
           },
           { default: () => "错误" }
+        );
+      } else {
+        return h(NTag, { type: "warning" }, { default: () => "未知" });
+      }
+    },
+  },
+  
+  {
+    title: "状态",
+    key: "status",
+    render(row) {
+      if (row.status == 1) {
+        return h(
+          NTag,
+          {
+            type: "success",
+          },
+          { default: () => "启用" }
+        );
+      } else if (row.status == 0) {
+        return h(
+          NTag,
+          {
+            type: "error",
+          },
+          { default: () => "禁用" }
         );
       } else {
         return h(NTag, { type: "warning" }, { default: () => "未知" });

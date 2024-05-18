@@ -5,14 +5,14 @@
 </template>
 
 <script setup>
-import { defineComponent, h } from "vue";
-import { NIcon, useMessage } from "naive-ui";
+import { h } from "vue";
+import { NIcon } from "naive-ui";
 import { RouterLink } from "vue-router";
 import {
   BarChart as BarChartIcon,
   BookmarksOutline as BookmarksOutlineIcon,
   BookOutline as BookOutlineIcon,
-  DocumentsOutline as DocumentsOutlineIcon,
+  DesktopOutline as DesktopOutlineIcon,
   HomeOutline as HomeIcon,
 } from "@vicons/ionicons5";
 
@@ -91,7 +91,7 @@ const menuOptions = [
             { default: () => "数据频道" }
           ),
         key: "go-data-channel",
-        icon: renderIcon(DocumentsOutlineIcon),
+        icon: renderIcon(DesktopOutlineIcon),
       },
     ],
   },
@@ -120,13 +120,14 @@ const handleUpdateValue = (key, item) => {
   border-right: 1px solid rgb(33 32 44 / 16%);
   transition: background-color 0.3s var(--n-bezier);
 }
+
 .n-menu {
   height: 100%;
 }
 
 .n-menu .n-menu-item-content .n-menu-item-content__icon,
-.n-menu .n-menu-item-content .n-menu-item-content-header a {
-}
+.n-menu .n-menu-item-content .n-menu-item-content-header a {}
+
 .n-layout-sider-scroll-container {
   padding: 0 !important;
 }

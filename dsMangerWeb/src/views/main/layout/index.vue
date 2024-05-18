@@ -25,10 +25,9 @@
 import { RouterView } from "vue-router";
 import headerVue from "./header.vue";
 import slideVue from "./slide.vue";
-import { useThemeHook } from './hooks/theme.hook'
+import { useThemeHook } from "./hooks/theme.hook";
 
-const { theme } = useThemeHook()
-
+const { theme } = useThemeHook();
 </script>
 
 <style>
@@ -41,9 +40,8 @@ const { theme } = useThemeHook()
 }
 
 .n-layout-content {
-  height: calc(100vh - 64px );
+  height: calc(100vh - 64px);
 }
-
 
 .main-content {
   margin: 2px;

@@ -1,6 +1,6 @@
 const mysql = require("mysql2");
-const { Pool } = require("pg");
-
+const vm = require("vm");
+const util = require("util");
 // 封装函数：连接MySQL并执行查询，返回查询结果
 /**
  *
@@ -26,22 +26,17 @@ const { Pool } = require("pg");
  * }
  *
  */
-export async function executeQueryWithConnection(
-  host,
-  user,
-  password,
-  database,
-  query
-) {
+async function executeQueryWithMysql(connectionConfig, query) {
   // 创建数据库连接
-  const connection = mysql.createConnection({
-    host: host,
-    user: user,
-    password: password,
-    database: database,
-    port,
-    charset,
-  });
+  // const connection = mysql.createConnection({
+  //   host: host,
+  //   user: user,
+  //   password: password,
+  //   database: database,
+  //   port,
+  //   charset,
+  // });
+  const connection = mysql.createConnection(connectionConfig);
 
   try {
     // 连接到MySQL
@@ -101,28 +96,26 @@ export async function executeQueryWithConnection(
  *     }
  * }
  */
-export async function executeQueryWithPg(connectionConfig, query, params = []) {
-  // 创建一个连接池
-  const pool = new Pool(connectionConfig);
+async function executeQueryWithPg(connectionConfig, query, params = []) {
+  const { Client } = require("pg");
+  const client = new Client(connectionConfig);
 
   try {
+    await client.connect();
     // 执行查询
-    const result = await pool.query(query, params);
+    const result = await client.query(query, params);
 
     // 返回查询结果
     return result.rows;
   } catch (error) {
     // 如果有错误，关闭连接池并抛出错误
-    pool.end();
+    client.end();
     throw error;
   } finally {
     // 确保在函数结束时关闭连接池
-    pool.end();
+    client.end();
   }
 }
-
-const vm = require("vm");
-const util = require("util");
 
 /**
  * Executes the given JavaScript code in a sandboxed environment.
@@ -140,25 +133,40 @@ const util = require("util");
  * console.error(util.inspect(faultyResult, { depth: null, colors: true })); // 输出错误信息
  *
  */
-export async function executeCodeInSandbox(code) {
-  // Create a sandbox object to isolate global variables.
-  const sandbox = {};
+async function executeCodeInSandbox(code) {
+  const vm = require("vm");
 
-  // Create a new context to isolate the global environment.
+  // 不安全的 JavaScript 代码
+  console.log('code', code)
+  
+  // 创建一个沙箱环境
+  const sandbox = {
+    // 可以在这里定义沙箱中的全局变量
+  };
+
   const context = vm.createContext(sandbox);
 
-  // Compile the script with the given code.
-  const script = new vm.Script(code, {
-    // Set any compilation options if needed.
-  });
-
   try {
-    // Execute the script in the sandbox context.
-    const result = script.runInContext(context);
-    // Return the result of the code execution.
-    return result;
+    // 在沙箱环境中执行代码
+    var result = vm.runInNewContext(code, context);
+
+    // 输出结果，注意，由于在沙箱中，`process` 不可访问
+    console.log('script',result);
+    return {
+      result,
+      error: null
+    }
   } catch (err) {
-    // Catch and return any errors that occur during execution.
-    return { error: err };
+    //打印超时的 log
+    return {
+      result,
+      error: err.message
+    }
   }
 }
+
+module.exports = {
+  executeQueryWithMysql,
+  executeQueryWithPg,
+  executeCodeInSandbox,
+};

@@ -1,5 +1,9 @@
 <template>
-  <div ref="editorContainer" class="editor-container"></div>
+  <div
+    ref="editorContainer"
+    class="editor-container"
+    :style="{ height: style.height, width: style.width }"
+  ></div>
 </template>
 
 <script>
@@ -20,6 +24,15 @@ export default {
     language: {
       type: String,
       default: "javascript",
+    },
+    style: {
+      type: Object,
+      default: () => {
+        return {
+          height: "200px",
+          width: "100%",
+        };
+      },
     },
   },
   setup(props, { emit }) {
@@ -88,9 +101,4 @@ export default {
 };
 </script>
 
-<style scoped>
-.editor-container {
-  width: 100%;
-  height: 200px;
-}
-</style>
+<style scoped></style>

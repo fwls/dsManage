@@ -57,26 +57,6 @@ const router = createRouter({
           path: "data/dataChannel",
           name: "dataChannel",
           component: () => import("@/views/main/data/dataChannel/index.vue"),
-          children: [
-            {
-              path: "dataChannelSet",
-              name: "dataChannelSet",
-              component: () =>
-                import("@/views/main/data/dataChannel/sets/index.vue"),
-            },
-            {
-              path: "dataChannelSet",
-              name: "dataChannelSet",
-              component: () =>
-                import("@/views/main/data/dataChannel/sets/index.vue"),
-            },
-            {
-              path: "dataChannelInfo",
-              name: "dataChannelInfo",
-              component: () =>
-                import("@/views/main/data/dataChannel/info/index.vue"),
-            },
-          ],
         },
       ],
     },

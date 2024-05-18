@@ -7,13 +7,14 @@
       :model="formValue"
       :rules="rules"
       :size="`small`"
+      style="padding: 0 10vw"
     >
       <n-form-item label="名称" path="name">
         <n-input v-model:value="formValue.name" placeholder="输入数据源名称" />
       </n-form-item>
-      <n-form-item label="类型" path="type">
+      <n-form-item label="类型" path="data_sources_type">
         <n-select
-          v-model:value="formValue.type"
+          v-model:value="formValue.data_sources_type"
           placeholder="数据源类型"
           :options="options"
         />
@@ -27,7 +28,7 @@
         />
       </n-form-item>
       <n-form-item
-        :label="formValue.type == 'javascript' ? '脚本' : 'SQL'"
+        :label="language == 'javascript' ? '脚本' : 'SQL'"
         path="content"
       >
         <!-- <monaco-editor
@@ -61,29 +62,70 @@
         <n-select v-model:value="formValue.status" :options="statusOptions" />
       </n-form-item>
       <n-form-item>
-        <n-button attr-type="button" @click="handleValidateClick">
-          提交
-        </n-button>
+        <n-flex justify="center" style="width: 100%">
+          <n-button
+            attr-type="button"
+            type="error"
+            ghost
+            @click="handleGoBack"
+            style="margin-right: 10px"
+          >
+            取消
+          </n-button>
+          
+          <n-button
+            attr-type="button"
+            type="info"
+            ghost
+            @click="handleTest"
+            style="margin-right: 10px"
+          >
+            测试
+          </n-button>
+          <n-button
+            attr-type="button"
+            type="primary"
+            ghost
+            @click="handleValidateClick"
+          >
+            提交
+          </n-button>
+        </n-flex>
       </n-form-item>
     </n-form>
   </n-card>
+  <jsonPreviewResult :value="jsonValue" ref="jsonPreviewRef" />
 </template>
 
 <script setup>
 import { onMounted, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import {cloneDeep} from 'lodash'
 // import { MonacoEditor } from "@/components/Pages/MonacoEditor";
-import MonacoEditor from "@/components/monacoEditor/index.vue";
+import MonacoEditor from "@/components/MonacoEditor/index.vue";
+import jsonPreviewResult from "@/views/main/data/components/jsonPreviewResult.vue";
 import { useDataSourceHook } from "@/views/main/data/dataSource/hooks/dataSource.hook";
-import { getDataSourceList } from "@/api/dataApi";
+import {
+  getDataSourceList,
+  getDataSetDetail,
+  addDataSet,
+  editDataSet,
+  testDataSet,
+} from "@/api/dataApi";
+
+const route = useRoute();
+const router = useRouter();
 
 const { options } = useDataSourceHook();
 
 const language = ref("javascript");
 const formRef = ref(null);
+const jsonPreviewRef = ref(null);
+const jsonValue = ref({});
 const dataSourceOptions = ref([]);
 const formValue = ref({
   name: "",
-  type: "javascript",
+  data_sources_type: "javascript",
   content: "",
   data_source_id: "",
   status: 1,
@@ -106,7 +148,7 @@ const rules = {
     message: "请输入数据集名称",
     trigger: "blur",
   },
-  type: {
+  data_sources_type: {
     required: true,
     message: "请输入数据集类型",
     trigger: "blur",
@@ -123,32 +165,64 @@ const rules = {
 
 const handleValidateClick = async (e) => {
   e.preventDefault();
-  formRef.value?.validate((errors) => {
+  formRef.value?.validate(async (errors) => {
     if (!errors) {
-      console.log(formValue.value);
-      // window["$message"].success("Valid");
-    } else {
-      console.log(errors);
-      // window["$message"].error("Invalid");
+      const id = route.query.id;
+      let res = null;
+      if (id) {
+        res = await editDataSet(formValue.value);
+      } else {
+        res = await addDataSet(formValue.value);
+      }
+      if (res && res.code == 200) {
+        window["$message"].success("操作成功");
+        router.push({ name: "dataSet" });
+      }
     }
   });
 };
 
-const getDataSourceOptions = () => {
-  getDataSourceList().then((res) => {
-    if (res) {
-      res.data.map((item) => {
-        dataSourceOptions.value.push({
-          label: item.name,
-          value: item.id,
-        });
-      });
+const handleTest = async (e) => {
+  e.preventDefault();
+  formRef.value?.validate(async (errors) => {
+    if (!errors) {
+      const parmas = cloneDeep(formValue.value);
+      delete parmas.id;
+      const res = await testDataSet(parmas);
+      if (res && res.code == 200) {
+        // console.log(res);
+        // jsonPreviewRef.value.open(JSON.stringify(res.data));
+        jsonValue.value = res.data;
+        jsonPreviewRef.value.open();
+      }
     }
   });
+};
+
+const getDataSourceOptions = async () => {
+  const res = await getDataSourceList();
+  if (res) {
+    res.data.map((item) => {
+      dataSourceOptions.value.push({
+        label: item.name,
+        value: item.id,
+      });
+    });
+  }
+};
+
+const getDatail = async () => {
+  const id = route.query.id;
+  if (id) {
+    const res = await getDataSetDetail({ id: id });
+    if (res) {
+      formValue.value = res.data;
+    }
+  }
 };
 
 watch(
-  () => formValue.value.type,
+  () => formValue.value.data_sources_type,
   (newValue) => {
     if (newValue === "javascript") {
       language.value = "javascript";
@@ -157,13 +231,16 @@ watch(
     } else if (newValue.includes("sql")) {
       language.value = "sql";
     }
-
-    console.log(newValue, language.value);
   }
 );
 
-onMounted(() => {
-  getDataSourceOptions();
+const handleGoBack = () => {
+  router.go(-1);
+}
+
+onMounted(async () => {
+  await getDataSourceOptions();
+  await getDatail();
 });
 </script>
 

@@ -200,7 +200,7 @@ const handleTest = async (e) => {
 };
 
 const getDataSourceOptions = async () => {
-  const res = await getDataSourceList();
+  const res = await getDataSourceList({status: 1});
   if (res) {
     res.data.map((item) => {
       dataSourceOptions.value.push({

@@ -184,7 +184,7 @@ const handleTest = async () => {
 };
 
 const getDataSetOptions = async () => {
-  const res = await getDataSetList();
+  const res = await getDataSetList({status: 1});
   if (res.code == 200) {
     dataSetOptions.value = res.data.map((item) => {
       return {

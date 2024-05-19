@@ -93,6 +93,17 @@ export default {
       }
     );
 
+    onMounted(() => {
+      if (props.language == "json") {
+        const formattedJson = JSON.stringify(
+          JSON.parse(props.modelValue),
+          null,
+          2
+        );
+        editor.setValue(formattedJson);
+      }
+    });
+
     // 返回暴露给模板的ref和其他计算属性
     return {
       editorContainer,

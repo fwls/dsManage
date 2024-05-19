@@ -14,6 +14,9 @@ router.get("/list", verifyToken, async (req, res) => {
     if (name) {
       query.where("name", "like", `%${name}%`);
     }
+    if (req.query.status) {
+      query.where("status", req.query.status);
+    }
 
     const results = await query
       .whereNull("deleted_at")

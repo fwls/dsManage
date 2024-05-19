@@ -32,7 +32,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { loginApi } from "@/api";
+import { loginApi } from "@/api/dataApi";
 
 const router = useRouter();
 

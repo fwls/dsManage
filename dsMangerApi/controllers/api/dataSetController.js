@@ -28,6 +28,9 @@ router.get("/list", verifyToken, async (req, res) => {
     if (name) {
       query.where("data_sets.name", "like", `%${name}%`);
     }
+    if (req.query.status) {
+      query.where("data_sets.status", req.query.status);
+    }
 
     const results = await query
       .whereNull("data_sets.deleted_at")

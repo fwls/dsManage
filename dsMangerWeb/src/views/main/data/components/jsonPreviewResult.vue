@@ -1,5 +1,5 @@
 <template>
-  <n-drawer v-model:show="showModal" :width="502" :placement="placement">
+  <n-drawer v-model:show="showModal" :width="`35%`" :placement="placement">
     <n-drawer-content title="结果预览">
       <div>
         <monaco-editor

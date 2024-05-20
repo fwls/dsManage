@@ -53,6 +53,15 @@ export async function getDataSourceDetail(data) {
   });
 }
 
+// 数据源连通性测试
+export async function testDataSourceConn(data) {
+  return request({
+    url: "/api/datasource/testConnstatus",
+    method: "post",
+    data,
+  });
+}
+
 // 数据集列表
 export async function getDataSetList(data) {
   return request({

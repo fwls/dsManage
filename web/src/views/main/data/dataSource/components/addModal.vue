@@ -2,12 +2,9 @@
   <n-modal
     v-model:show="showModal"
     preset="card"
-    title="Dialog"
+    title="数据源管理"
     style="width: 500px"
   >
-    <template #header>
-      <div>数据源管理</div>
-    </template>
     <div>
       <n-form
         ref="formRef"
@@ -124,15 +121,13 @@ defineExpose({ open, close });
 watch(
   () => model.value.type,
   (newValue) => {
-    if (newValue === "javascript") {
+    if (newValue.includes("javascript")) {
       language.value = "javascript";
     } else if (newValue === "json") {
       language.value = "json";
     } else if (newValue.includes("sql")) {
       language.value = "sql";
     }
-
-    console.log('language', language.value)
   }
 );
 </script>

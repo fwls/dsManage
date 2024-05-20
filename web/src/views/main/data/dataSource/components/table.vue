@@ -1,22 +1,17 @@
 <template>
-  <n-data-table
-    :columns="columns"
-    :data="data"
-    :pagination="pagination"
-    :bordered="false"
-  />
+  <n-data-table :columns="columns" :data="data" :pagination="pagination" :bordered="false" />
 
   <add-modal ref="addModalRef" @fresh="getDataList" />
 </template>
 
 <script setup>
-import { onMounted, h, reactive } from "vue";
-import { deleteDataSource } from "@/api/dataApi";
+import { onMounted, h, reactive, nextTick } from "vue";
+import { deleteDataSource, testDataSourceConn } from "@/api/dataApi";
 import { useDataSourceHook } from "../hooks/dataSource.hook";
 import { NButton, NTag } from "naive-ui";
 import addModal from "./addModal.vue";
 
-const { data,  getDataList, addModalRef } = useDataSourceHook();
+const { data, getDataList, addModalRef } = useDataSourceHook();
 
 const pagination = reactive({
   page: 1,
@@ -72,7 +67,7 @@ const columns = [
       }
     },
   },
-  
+
   {
     title: "状态",
     key: "status",
@@ -106,6 +101,17 @@ const columns = [
     title: "操作",
     key: "actions",
     render(row) {
+      const test_connt = h(
+        NButton,
+        {
+          strong: true,
+          tertiary: true,
+          size: "small",
+          style: { marginRight: "5px" },
+          onClick: () => hanleTestConn(row),
+        },
+        { default: () => "测试连接" }
+      )
       const edit = h(
         NButton,
         {
@@ -135,11 +141,25 @@ const columns = [
             display: "flex",
           },
         },
-        { default: () => [edit, del] }
+        { default: () => [test_connt, edit, del] }
       );
     },
   },
 ];
+
+const hanleTestConn = async (row) => {
+  const res = await testDataSourceConn({ id: row.id });
+  if (res.code == 200) {
+    window["$message"].success("测试连接成功");
+  } else {
+    window["$message"].error("测试连接失败");
+  }
+
+  nextTick(async () => {
+    await getDataList();
+  });
+}
+
 
 const handleOpenAddModal = (value) => {
   addModalRef.value?.open(value);
@@ -162,7 +182,7 @@ const handleDel = async (row) => {
 };
 
 const search = async (value) => {
-    getDataList(value);
+  getDataList(value);
 };
 
 onMounted(() => {

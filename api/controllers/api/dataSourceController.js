@@ -3,6 +3,7 @@ const { pick } = require("lodash");
 const router = express.Router();
 const { verifyToken } = require("../../utils/index");
 const knex = require("../../config/db");
+const dbHelper = require("../../utils/dbHelper");
 
 // 获取数据源
 router.get("/list", verifyToken, async (req, res) => {
@@ -143,6 +144,95 @@ router.post("/delete", verifyToken, async (req, res) => {
       msg: "success",
       code: 200,
     });
+  } catch (error) {
+    res.json({
+      data: null,
+      msg: error.message,
+      code: 500,
+    });
+  }
+});
+
+router.post("/testConnstatus", verifyToken, async (req, res) => {
+  try {
+    const { id } = req.body;
+    const datasource = await knex("data_sources").where("id", id).first();
+    if (datasource) {
+      if (datasource.type.includes('javascript')) {
+        res.json({
+          data: { "conn_status": 1 },
+          msg: "success",
+          code: 200,
+        });
+      } else if (datasource.type.includes('mysql')) {
+        const mysql2 = require('mysql2');
+        const connection = mysql2.createConnection({
+          host: datasource.url,
+          user: datasource.username,
+          password: datasource.password,
+          database: datasource.database,
+          port: datasource.port,
+          charset: datasource.charset,
+        });
+
+        // 连接到MySQL数据库
+        connection.connect(async (err) => {
+          if (err) {
+            await knex("data_sources").where("id", id).update({
+              conn_status: 0
+            });
+            res.json({
+              data: { "conn_status": 0 },
+              msg: JSON.stringify(err),
+              code: 500,
+            });
+          } else {
+            await knex("data_sources").where("id", id).update({
+              conn_status: 1
+            });
+            res.json({
+              data: { "conn_status": 1 },
+              msg: "success",
+              code: 200,
+            });
+          }
+        });
+      } else if (datasource.type.includes('postgresql')) {
+        const pg = require('pg');
+
+        const client = pg.connect({
+          host: datasource.url,
+          user: datasource.username,
+          password: datasource.password,
+          database: datasource.database,
+          port: datasource.port,
+        });
+
+        // 连接到PostgreSQL数据库
+        client.connect(async (err) => {
+          if (err) {
+            await knex("data_sources").where("id", id).update({
+              conn_status: 0
+            });
+            res.json({
+              data: { "conn_status": 0 },
+              msg: JSON.stringify(err),
+              code: 500,
+            });
+          } else {
+            await knex("data_sources").where("id", id).update({
+              conn_status: 1
+            });
+            res.json({
+              data: { "conn_status": 1 },
+              msg: "success",
+              code: 200,
+            });
+          }
+        });
+      }
+    }
+
   } catch (error) {
     res.json({
       data: null,

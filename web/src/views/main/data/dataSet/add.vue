@@ -125,7 +125,7 @@ const jsonValue = ref({});
 const dataSourceOptions = ref([]);
 const formValue = ref({
   name: "",
-  data_sources_type: "javascript",
+  data_sources_type: "",
   content: "",
   data_source_id: "",
   status: 1,
@@ -224,7 +224,7 @@ const getDatail = async () => {
 watch(
   () => formValue.value.data_sources_type,
   (newValue) => {
-    if (newValue === "javascript") {
+    if (newValue.includes("javascript")) {
       language.value = "javascript";
     } else if (newValue === "json") {
       language.value = "json";

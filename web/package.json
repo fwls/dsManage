@@ -17,6 +17,7 @@
     "monaco-editor": "^0.48.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
+    "pnpm": "^9.1.2",
     "sql-formatter": "^15.3.1",
     "vue": "^3.4.21",
     "vue-monaco": "^1.2.2",

@@ -14,6 +14,8 @@ import {
   BookOutline as BookOutlineIcon,
   DesktopOutline as DesktopOutlineIcon,
   HomeOutline as HomeIcon,
+  SettingsOutline as SettingsOutlineIcon,
+  PeopleOutline as PeopleOutlineIcon,
 } from "@vicons/ionicons5";
 
 function renderIcon(icon) {
@@ -96,13 +98,24 @@ const menuOptions = [
     ],
   },
   {
-    label: "饮品",
-    key: "beverage",
-    icon: renderIcon(BarChartIcon),
+    label: "系统管理",
+    key: "system",
+    icon: renderIcon(SettingsOutlineIcon),
     children: [
       {
-        label: "威士忌",
-        key: "whisky",
+        label: () =>
+          h(
+            RouterLink,
+            {
+              to: {
+                name: "systemUser",
+                params: {},
+              },
+            },
+            { default: () => "用户管理" }
+          ),
+        key: "user",
+        icon: renderIcon(PeopleOutlineIcon),
       },
     ],
   },

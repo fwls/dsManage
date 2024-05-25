@@ -58,6 +58,18 @@ const router = createRouter({
           name: "dataChannel",
           component: () => import("@/views/main/data/dataChannel/index.vue"),
         },
+        {
+          path: "system",
+          name: "system",
+          redirect: "/main/system/user",
+          children: [
+            {
+              path: "user",
+              name: "systemUser",
+              component: () => import("@/views/main/system/user/index.vue"),
+            }
+          ]
+        },
       ],
     },
     {

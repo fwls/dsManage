@@ -1,9 +1,13 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const knex = require('../../config/db');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { secret } = require("../../config/jwtConfig");
+const knex = require("../../config/db");
 
-router.get('/users', (req, res) => {
+router.get('/list', (req, res) => {
   // 获取所有用户的逻辑
+
 });
 
 router.get('/users/:id', (req, res) => {

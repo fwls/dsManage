@@ -3,7 +3,6 @@ const { pick } = require("lodash");
 const router = express.Router();
 const { verifyToken } = require("../../utils/index");
 const knex = require("../../config/db");
-const dbHelper = require("../../utils/dbHelper");
 
 // 获取数据源
 router.get("/list", verifyToken, async (req, res) => {

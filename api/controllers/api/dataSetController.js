@@ -3,7 +3,7 @@ const { pick } = require("lodash");
 const router = express.Router();
 const knex = require("../../config/db");
 const { verifyToken } = require("../../utils/index");
-const dbHelper = require("../../utils/dbHelper");
+const executeHelper = require("../../utils/executeHelper");
 
 const tableName = `data_sets`;
 
@@ -174,7 +174,7 @@ router.post("/execute", verifyToken, async (req, res) => {
       let result = null;
       switch (dataSource.type) {
         case "mysql":
-          result = await dbHelper.executeQueryWithMysql(
+          result = await executeHelper.executeQueryWithMysql(
             {
               host: dataSource.url,
               user: dataSource.username,
@@ -188,7 +188,7 @@ router.post("/execute", verifyToken, async (req, res) => {
 
           break;
         case "pg":
-          result = await dbHelper.executeQueryWithPg(
+          result = await executeHelper.executeQueryWithPg(
             {
               host: dataSource.url,
               user: dataSource.username,
@@ -200,13 +200,20 @@ router.post("/execute", verifyToken, async (req, res) => {
           );
 
           break;
-        case "javascript":
-          result = await dbHelper.executeCodeInSandbox(dataSet.content);
+        case "javascript(vm)":
+          result = await executeHelper.executeCodeInSandbox(dataSet.content);
           if (result.error != null) {
             // 抛出异常
             throw new Error(result.error);
           }
-          break;
+          break; 
+          case "javascript(expert)":
+            result = await executeHelper.executeCodeDirect(dataSet.content);
+            if (result.error != null) {
+              // 抛出异常
+              throw new Error(result.error);
+            }
+            break;
         default:
           res.json({
             data: null,

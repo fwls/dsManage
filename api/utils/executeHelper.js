@@ -162,8 +162,26 @@ async function executeCodeInSandbox(code) {
   }
 }
 
+async function executeCodeDirect(code) {
+  try {
+    const result = eval(code);
+
+    return {
+      result,
+      error: null,
+    };
+  } catch (err) {
+    //打印超时的 log
+    return {
+      result,
+      error: err.message,
+    };
+  }
+}
+
 module.exports = {
   executeQueryWithMysql,
   executeQueryWithPg,
   executeCodeInSandbox,
+  executeCodeDirect
 };

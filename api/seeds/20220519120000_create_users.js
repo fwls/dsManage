@@ -39,7 +39,7 @@ exports.seed = function (knex) {
           {
             id: 2,
             name: "jsEngine1",
-            type: "javascript",
+            type: "javascript(vm)",
             url: null,
             username: null,
             password: null,

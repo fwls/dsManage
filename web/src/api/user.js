@@ -44,3 +44,12 @@ export async function deleteUser(data) {
     data,
   });
 }
+
+//修改密码
+export async function editPassword(data) {
+  return request({
+    url: "/api/user/editPassword",
+    method: "post",
+    data,
+  });
+}

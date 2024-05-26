@@ -17,11 +17,11 @@ router.post("/login", async (req, res) => {
     const user = await knex("users").where("username", username).first();
 
     if (!user || !user.password || !bcrypt.compareSync(password, user.password)) {
-      return res.status(401).json({ msg: "无效的用户名或密码", code: 500 });
+      return res.status(200).json({ msg: "无效的用户名或密码", code: 500 });
     }
 
     const token = jwt.sign({ id: user.id }, secret, { expiresIn: "30d" });
-    return res.status(200).json({ token, code: 200, msg: "登录成功" });
+    return res.status(200).json({ token, code: 200, msg: "登录成功", data:{username: user.username, id: user.id, is_admin: user.is_admin} });
   } catch (err) {
     return res.status(500).json({ msg: "服务器错误", code: 500 });
   }

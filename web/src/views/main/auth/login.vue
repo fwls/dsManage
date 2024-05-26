@@ -1,24 +1,14 @@
 <template>
   <div class="login">
     <n-card title="登录">
-      <n-form
-        ref="formRef"
-        :model="model"
-        label-placement="left"
-        label-width="auto"
-        :style="{
-          maxWidth: '640px',
-        }"
-      >
+      <n-form ref="formRef" :model="model" label-placement="left" label-width="auto" :style="{
+        maxWidth: '640px',
+      }">
         <n-form-item label="用户名" path="inputValue" required>
           <n-input v-model:value="model.username" placeholder="请输入用户名" />
         </n-form-item>
         <n-form-item label="密码" path="inputValue" required>
-          <n-input
-            type="password"
-            v-model:value="model.password"
-            placeholder="请输入密码"
-          />
+          <n-input type="password" v-model:value="model.password" placeholder="请输入密码" />
         </n-form-item>
 
         <div style="display: flex; justify-content: flex-end">
@@ -33,6 +23,10 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { loginApi } from "@/api/dataApi";
+import { useSystemSettingStore } from "@/store";
+import { storeToRefs } from "pinia";
+
+const { userInfo } = storeToRefs(useSystemSettingStore())
 
 const router = useRouter();
 
@@ -55,6 +49,7 @@ const handleLogin = async () => {
   } else {
     window["$message"].success("登录成功");
     localStorage.setItem("token", res.token);
+    userInfo.value = res.data
     router.push({ name: "mainDashboardIndex" });
   }
 };

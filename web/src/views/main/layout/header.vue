@@ -23,13 +23,23 @@
       </div>
     </div>
   </div>
+  <changePass ref="changePassRef" />
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useThemeHook } from './hooks/theme.hook'
+import changePass from './components/changePass.vue'
+
 const { active, handleChange } = useThemeHook()
 
+const changePassRef = ref(null)
+
 const options = [
+  {
+    label: "修改密码",
+    key: "changePass",
+  },
   {
     label: "退出",
     key: "logout",
@@ -37,9 +47,12 @@ const options = [
 ];
 const handleSelect = (key) => {
   console.log(String(key));
-  switch(key) {
+  switch (key) {
     case "logout":
-      doLogout()
+      doLogout();
+      break
+    case "changePass":
+      changePassRef.value.open();
       break
     default:
       break

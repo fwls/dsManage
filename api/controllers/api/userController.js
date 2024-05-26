@@ -44,7 +44,7 @@ router.get("/list", verifyToken, async (req, res) => {
   }
 });
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
   // 获取单个用户的逻辑
   try {
     const id = req.params.id;
@@ -54,7 +54,7 @@ router.get('/:id', async (req, res) => {
       msg: "success",
       code: 200,
     });
-  } catch(error) {
+  } catch (error) {
     res.json({
       data: null,
       msg: error.message,
@@ -64,7 +64,7 @@ router.get('/:id', async (req, res) => {
 });
 
 
-router.post('/add', async (req, res) => {
+router.post('/add', verifyToken, async (req, res) => {
   // 获取单个用户的逻辑
   try {
     const data = {
@@ -88,7 +88,7 @@ router.post('/add', async (req, res) => {
   }
 });
 
-router.post('/edit', async (req, res) => {
+router.post('/edit', verifyToken, async (req, res) => {
   // 获取单个用户的逻辑
   try {
     const data = {
@@ -116,7 +116,7 @@ router.post('/edit', async (req, res) => {
 });
 
 // 删除
-router.post('/delete', async (req, res) => {
+router.post('/delete', verifyToken, async (req, res) => {
   // 获取单个用户的逻辑
   try {
     const data = {
@@ -135,6 +135,49 @@ router.post('/delete', async (req, res) => {
       code: 500,
     });
   }
+});
+
+
+// 修改密码
+router.post('/editPassword', verifyToken, async (req, res) => {
+  // 获取单个用户的逻辑
+  const { old_pass, new_pass, repeat_pass } = req.body
+  // try {
+  const data = {
+    password: ''
+  }
+  const user = await knex(tableName).where('id', req.user.id).first();
+  if (user.password && bcrypt.compareSync(old_pass, user.password)) {
+    if (new_pass === repeat_pass) {
+      data.password = bcrypt.hashSync(req.body.new_pass, 10)
+    } else {
+      return res.json({
+        data: null,
+        msg: "两次密码输入不一致",
+        code: 500,
+      });
+    }
+  } else {
+    return res.json({
+      data: null,
+      msg: "旧密码不正确",
+      code: 500,
+    });
+  }
+
+  const result = await knex(tableName).where('id', req.user.id).update(data)
+  res.json({
+    data: result,
+    msg: "success",
+    code: 200,
+  });
+  // } catch (error) {
+  //   res.json({
+  //     data: null,
+  //     msg: error.message,
+  //     code: 500,
+  //   });
+  // }
 });
 
 module.exports = router;

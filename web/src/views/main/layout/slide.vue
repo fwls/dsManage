@@ -17,6 +17,11 @@ import {
   SettingsOutline as SettingsOutlineIcon,
   PeopleOutline as PeopleOutlineIcon,
 } from "@vicons/ionicons5";
+import { useSystemSettingStore } from "@/store";
+import { storeToRefs } from "pinia";
+
+const { userInfo } = storeToRefs(useSystemSettingStore())
+
 
 function renderIcon(icon) {
   return () => h(NIcon, null, { default: () => h(icon) });
@@ -29,7 +34,7 @@ const menuOptions = [
         RouterLink,
         {
           to: {
-            name: "main",
+            name: "dataSource",
             params: {},
           },
         },
@@ -115,11 +120,13 @@ const menuOptions = [
             { default: () => "用户管理" }
           ),
         key: "user",
+        show: userInfo.value.is_admin == 1,
         icon: renderIcon(PeopleOutlineIcon),
       },
     ],
   },
 ];
+
 
 const handleUpdateValue = (key, item) => {
   // message.info("[onUpdate:value]: " + JSON.stringify(key));

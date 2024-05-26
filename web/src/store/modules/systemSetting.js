@@ -7,7 +7,10 @@ export const useSystemSettingStore = defineStore('systemSettingStore', {
     return {
       // 所有这些属性都将自动推断其类型
       active: false,
-      theme: darkTheme
+      theme: darkTheme,
+      userInfo: {
+        
+      }
     }
   },
   persist: true,

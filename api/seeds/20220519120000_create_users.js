@@ -9,12 +9,12 @@ exports.seed = function (knex) {
       .then(function () {
         // Inserts seed entries
         return knex("users").insert([
-          { username: "admin", password: bcrypt.hashSync("123456", 10) },
+          { username: "admin", password: bcrypt.hashSync("123456", 10), status: 1 },
           {
             username: "john_doe",
             password: bcrypt.hashSync("password123", 10),
           },
-          { username: "jane_smith", password: bcrypt.hashSync("abc@123", 10) },
+          { username: "jane_smith", password: bcrypt.hashSync("abc@123", 10), status: 1 },
         ]);
       }),
 
@@ -35,6 +35,7 @@ exports.seed = function (knex) {
             port: 3306,
             charset: "utf8",
             status: 1,
+            user_id: 1,
           },
           {
             id: 2,
@@ -49,6 +50,7 @@ exports.seed = function (knex) {
             charset: null,
             status: 1,
             conn_status: 1,
+            user_id: 1,
           },
         ]);
       }),
@@ -63,12 +65,14 @@ exports.seed = function (knex) {
             data_source_id: 1,
             content: `SELECT now()`,
             status: 1,
+            user_id: 1,
           },
           {
             id: 2,
             name: "jsEngine1",
             data_source_id: 2,
             status: 1,
+            user_id: 1,
             content: `function main(){
                 return {
                     value: "ok1"
@@ -79,7 +83,7 @@ exports.seed = function (knex) {
           },
         ]);
       }),
-      knex("data_channels")
+    knex("data_channels")
       .del()
       .then(function () {
         // Inserts seed entries
@@ -89,12 +93,14 @@ exports.seed = function (knex) {
             name: "测试频道",
             remark: `SELECT now()`,
             status: 1,
+            user_id: 1,
           },
           {
             id: 2,
             name: "jsEngine1",
             remark: 2,
             status: 1,
+            user_id: 1,
           },
         ]);
       }),

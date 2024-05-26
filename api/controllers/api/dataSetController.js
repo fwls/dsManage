@@ -10,6 +10,7 @@ const tableName = `data_sets`;
 router.get("/list", verifyToken, async (req, res) => {
   try {
     const query = knex(tableName)
+      .where('data_sets.user_id', req.user.id)
       .leftJoin(
         "data_sources",
         "data_sources.id",
@@ -99,6 +100,7 @@ router.post("/add", verifyToken, async (req, res) => {
     content: req.body.content,
     data_source_id: req.body.data_source_id,
     status: req.body.status,
+    user_id: req.user.id,
   };
   try {
     const [id] = await knex(tableName).insert(data);

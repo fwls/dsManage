@@ -8,7 +8,7 @@ const tableNameSets = `data_channel_data_sets`;
 
 router.get("/list", verifyToken, async (req, res) => {
   try {
-    const query = knex(tableNameSets).select(
+    const query = knex(tableNameSets).where('user_id', req.user.id).select(
       "id",
       "name",
       "status",

@@ -9,7 +9,7 @@ const tableNameSets = `data_channel_data_sets`;
 
 router.get("/list", verifyToken, async (req, res) => {
   try {
-    const query = knex(tableName).select("id", "name", "status", "created_at");
+    const query = knex(tableName).where('user_id', req.user.id).select("id", "name", "status", "created_at");
     const { name } = req.query;
     if (name) {
       query.where("name", "like", `%${name}%`);
@@ -45,7 +45,6 @@ router.get("/list", verifyToken, async (req, res) => {
 });
 
 router.get("/:id", verifyToken, async (req, res) => {
-  console.log(11111111, 22222222222);
   try {
     const id = req.params.id;
     const result = await knex(tableName).where("id", id).first();
@@ -68,6 +67,7 @@ router.post("/add", verifyToken, async (req, res) => {
     name: req.body.name,
     remark: req.body.remark,
     status: req.body.status,
+    user_id: req.user.id,
   };
 
   try {

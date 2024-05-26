@@ -17,6 +17,7 @@ exports.up = function(knex) {
         table.smallint('conn_status').defaultTo(0);
         table.timestamp('deleted_at');
         table.smallint('status').defaultTo(0);
+        table.integer('user_id').defaultTo(0).comment("创建人");
         table.json('ext').comment("扩展字段");
         
         table.timestamps(true, true);

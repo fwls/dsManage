@@ -164,8 +164,7 @@ async function executeCodeInSandbox(code) {
 
 async function executeCodeDirect(code) {
   try {
-    const result = eval(code);
-
+    const result = await eval(code);
     return {
       result,
       error: null,

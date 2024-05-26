@@ -7,7 +7,7 @@ const knex = require("../../config/db");
 // 获取数据源
 router.get("/list", verifyToken, async (req, res) => {
   try {
-    const query = knex("data_sources").select(
+    const query = knex("data_sources").where('user_id', req.user.id).select(
       "id",
       "name",
       "type",
@@ -81,6 +81,8 @@ router.post("/add", verifyToken, async (req, res) => {
     ext: req.body.ext,
     port: req.body.port,
     charset: req.body.charset,
+    user_id: req.user.id,
+    status: req.body.status,
   };
   if (data.type == "javascript") {
     data.status = 1;
@@ -112,7 +114,7 @@ router.post("/edit", verifyToken, async (req, res) => {
     "database",
     "charset",
     "ext",
-    "port",
+    "status",
   ];
   const data = await knex("data_sources")
     .where("id", id)
@@ -158,6 +160,9 @@ router.post("/testConnstatus", verifyToken, async (req, res) => {
     const datasource = await knex("data_sources").where("id", id).first();
     if (datasource) {
       if (datasource.type.includes('javascript')) {
+        await knex("data_sources").where("id", id).update({
+          conn_status: 1
+        });
         res.json({
           data: { "conn_status": 1 },
           msg: "success",

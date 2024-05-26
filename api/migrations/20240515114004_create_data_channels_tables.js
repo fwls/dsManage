@@ -10,6 +10,7 @@ exports.up = function (knex) {
             table.string('remark');
             table.smallint('status').defaultTo(0);
             table.timestamp('deleted_at');
+            table.integer('user_id').defaultTo(0).comment("创建人");
             table.timestamps(true, true);
         })
     ])

@@ -13,6 +13,7 @@ exports.up = function (knex) {
             table.integer('data_set_id').unsigned().notNullable().references('id').inTable('data_sets').onDelete('cascade');
             table.smallint('status').defaultTo(0);
             table.timestamp('deleted_at');
+            table.integer('user_id').defaultTo(0).comment("创建人");
             table.timestamps(true, true);
         })
     ])

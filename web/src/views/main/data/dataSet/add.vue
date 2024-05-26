@@ -28,7 +28,7 @@
         <monaco-editor v-model:modelValue="formValue.content" v-if="language == 'json'" language="json" />
         <monaco-editor v-model:modelValue="formValue.content" v-if="language == 'sql'" language="sql" />
       </n-form-item>
-      <n-form-item label="状态">
+      <n-form-item >
         <n-space>
           <n-tag type="success" @click="handleClick(`jsvm`)" style="cursor: pointer;">插入js(沙盒)代码示例</n-tag>
           <n-tag type="success" @click="handleClick(`jscus`)" style="cursor: pointer;">插入js(高级)代码示例</n-tag>

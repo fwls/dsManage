@@ -23,7 +23,7 @@
           >
             验证
           </n-button>
-          <n-button attr-type="button" @click="handleAdd"> 新增 </n-button>
+          <n-button attr-type="button" type="primary" @click="handleAdd"> 新增 </n-button>
         </n-form-item>
       </n-form>
 

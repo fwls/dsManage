@@ -206,14 +206,7 @@ export async function deleteChannelDataSet(data) {
   });
 }
 
-// 获取用户列表
-export async function getUserList(data) {
-  return request({
-    url: "/api/user/list",
-    method: "get",
-    params: data,
-  });
-}
+
 
 // export function getList(params) {
 //   return request({

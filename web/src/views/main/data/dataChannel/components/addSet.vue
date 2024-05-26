@@ -57,9 +57,9 @@
     </n-form>
     <template #footer>
       <n-flex justify="end">
-        <n-button attr-type="button" @click="handleTest"> 测试 </n-button>
-        <n-button attr-type="button" @click="close"> 取消 </n-button>
-        <n-button attr-type="button" @click="handleValidateButtonClick">
+        <n-button attr-type="button" ghost @click="handleTest"> 测试 </n-button>
+        <n-button attr-type="button" ghost @click="close"> 取消 </n-button>
+        <n-button attr-type="button" ghost type="primary" @click="handleValidateButtonClick">
           确定
         </n-button>
       </n-flex>

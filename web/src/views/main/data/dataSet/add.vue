@@ -1,36 +1,18 @@
 <template>
   <n-card>
-    <n-form
-      ref="formRef"
-      :label-width="80"
-      label-position="left"
-      :model="formValue"
-      :rules="rules"
-      :size="`small`"
-      style="padding: 0 10vw"
-    >
+    <n-form ref="formRef" :label-width="80" label-position="left" :model="formValue" :rules="rules" :size="`small`"
+      style="padding: 0 10vw">
       <n-form-item label="名称" path="name">
         <n-input v-model:value="formValue.name" placeholder="输入数据源名称" />
       </n-form-item>
       <n-form-item label="类型" path="data_sources_type">
-        <n-select
-          v-model:value="formValue.data_sources_type"
-          placeholder="数据源类型"
-          :options="options"
-        />
+        <n-select v-model:value="formValue.data_sources_type" placeholder="数据源类型" :options="options" />
       </n-form-item>
 
       <n-form-item label="数据源" path="data_source_id">
-        <n-select
-          filterable
-          v-model:value="formValue.data_source_id"
-          :options="dataSourceOptions"
-        />
+        <n-select filterable v-model:value="formValue.data_source_id" :options="dataSourceOptions" />
       </n-form-item>
-      <n-form-item
-        :label="language == 'javascript' ? '脚本' : 'SQL'"
-        path="content"
-      >
+      <n-form-item :label="language == 'javascript' ? '脚本' : 'SQL'" path="content">
         <!-- <monaco-editor
           v-model:modelValue="formValue.content"
           v-if="language == 'javascript'"
@@ -42,52 +24,31 @@
             minimap: { enabled: true },
           }"
         /> -->
-        <monaco-editor
-          v-model:modelValue="formValue.content"
-          v-if="language == 'javascript'"
-          language="javascript"
-        />
-        <monaco-editor
-          v-model:modelValue="formValue.content"
-          v-if="language == 'json'"
-          language="json"
-        />
-        <monaco-editor
-          v-model:modelValue="formValue.content"
-          v-if="language == 'sql'"
-          language="sql"
-        />
+        <monaco-editor v-model:modelValue="formValue.content" v-if="language == 'javascript'" language="javascript" />
+        <monaco-editor v-model:modelValue="formValue.content" v-if="language == 'json'" language="json" />
+        <monaco-editor v-model:modelValue="formValue.content" v-if="language == 'sql'" language="sql" />
+      </n-form-item>
+      <n-form-item label="状态">
+        <n-space>
+          <n-tag type="success" @click="handleClick(`jsvm`)" style="cursor: pointer;">插入js(沙盒)代码示例</n-tag>
+          <n-tag type="success" @click="handleClick(`jscus`)" style="cursor: pointer;">插入js(高级)代码示例</n-tag>
+          <n-tag type="success" @click="handleClick(`jsvmHttp`)" style="cursor: pointer;">插入js(高级)Http代码示例</n-tag>
+        </n-space>
       </n-form-item>
       <n-form-item label="状态" path="status">
         <n-select v-model:value="formValue.status" :options="statusOptions" />
       </n-form-item>
       <n-form-item>
         <n-flex justify="center" style="width: 100%">
-          <n-button
-            attr-type="button"
-            type="error"
-            ghost
-            @click="handleGoBack"
-            style="margin-right: 10px"
-          >
+          <n-button attr-type="button" type="error" ghost @click="handleGoBack" style="margin-right: 10px">
             取消
           </n-button>
-          
-          <n-button
-            attr-type="button"
-            type="info"
-            ghost
-            @click="handleTest"
-            style="margin-right: 10px"
-          >
+
+          <n-button attr-type="button" type="info" ghost @click="handleTest" style="margin-right: 10px">
             测试
           </n-button>
-          <n-button
-            attr-type="button"
-            type="primary"
-            ghost
-            @click="handleValidateClick"
-          >
+          <n-button attr-type="button" type="primary" ghost @click="handleValidateClick">
+
             提交
           </n-button>
         </n-flex>
@@ -100,7 +61,7 @@
 <script setup>
 import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import {cloneDeep} from 'lodash'
+import { cloneDeep } from 'lodash'
 // import { MonacoEditor } from "@/components/Pages/MonacoEditor";
 import MonacoEditor from "@/components/MonacoEditor/index.vue";
 import jsonPreviewResult from "@/views/main/data/components/jsonPreviewResult.vue";
@@ -200,7 +161,7 @@ const handleTest = async (e) => {
 };
 
 const getDataSourceOptions = async () => {
-  const res = await getDataSourceList({status: 1});
+  const res = await getDataSourceList({ status: 1 });
   if (res) {
     res.data.map((item) => {
       dataSourceOptions.value.push({
@@ -218,6 +179,33 @@ const getDatail = async () => {
     if (res) {
       formValue.value = res.data;
     }
+  }
+};
+
+const handleClick = (key) => {
+  switch (key) {
+    case 'jsvm':
+      formValue.value.content = `function main(){
+                return {
+                    value: "ok1"
+                }
+            }
+            main()`
+      break;
+    case 'jscus':
+      formValue.value.content = `console.log("hello world")`
+      break;
+    case 'jsvmHttp':
+      formValue.value.content = `fetch('http://cdn.apc.360.cn/index.php?c=WallPaper&a=getAllCategoriesV2&from=360chrome')
+    .then(response => response.json())
+    .then(data => {
+        return data
+    })
+    .catch(error => console.error('Error:', error));
+`
+      break;
+    default:
+      break;
   }
 };
 

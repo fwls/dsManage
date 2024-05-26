@@ -22,7 +22,7 @@
         <n-button attr-type="button" ghost @click="getDataList" style="margin-right: 10px">
           搜索
         </n-button>
-        <n-button attr-type="button" ghost @click="handleOpenAddSetModal">
+        <n-button attr-type="button" type="primary" ghost @click="handleOpenAddSetModal">
           新增
         </n-button>
       </n-form-item>

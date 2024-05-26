@@ -61,7 +61,7 @@ const router = createRouter({
         {
           path: "system",
           name: "system",
-          redirect: "/main/system/user",
+          redirect: "system/user",
           children: [
             {
               path: "user",

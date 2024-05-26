@@ -21,12 +21,12 @@
             />
           </n-form-item>
           <n-form-item>
-            <n-button attr-type="button" @click="handleSearch"> 搜索 </n-button>
+            <n-button attr-type="button" ghost @click="handleSearch"> 搜索 </n-button>
           </n-form-item>
         </n-form>
       </div>
       <div class="right">
-        <n-button attr-type="button" size="small" @click="openAddModal">
+        <n-button attr-type="button" type="primary" ghost size="small" @click="openAddModal">
           新增
         </n-button>
       </div>

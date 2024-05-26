@@ -1,29 +1,14 @@
 <template>
-  <n-modal
-    v-model:show="showModal"
-    preset="card"
-    title="数据源管理"
-    style="width: 500px"
-  >
+  <n-modal v-model:show="showModal" preset="card" title="数据源管理" style="width: 500px">
     <div>
-      <n-form
-        ref="formRef"
-        :model="model"
-        label-placement="left"
-        label-width="auto"
-        :style="{
-          maxWidth: '640px',
-        }"
-      >
+      <n-form ref="formRef" :model="model" label-placement="left" label-width="auto" size="small" :style="{
+        maxWidth: '640px',
+      }">
         <n-form-item label="名称" path="name">
           <n-input v-model:value="model.name" placeholder="数据源名称" />
         </n-form-item>
         <n-form-item label="类型" path="type">
-          <n-select
-            v-model:value="model.type"
-            placeholder="数据源类型"
-            :options="options"
-          />
+          <n-select v-model:value="model.type" placeholder="数据源类型" :options="options" />
         </n-form-item>
         <n-form-item label="地址" path="url" v-if="language == 'sql'">
           <n-input v-model:value="model.url" placeholder="数据源地址" />
@@ -37,26 +22,22 @@
         <n-form-item label="密码" path="password" v-if="language == 'sql'">
           <n-input v-model:value="model.password" placeholder="数据源密码" />
         </n-form-item>
-        <n-form-item
-          label="数据库名称"
-          path="database"
-          v-if="language == 'sql'"
-        >
+        <n-form-item label="数据库名称" path="database" v-if="language == 'sql'">
           <n-input v-model:value="model.database" placeholder="数据库名称" />
         </n-form-item>
         <n-form-item label="字符集" path="charset" v-if="language == 'sql'">
-          <n-input
-            v-model:value="model.charset"
-            placeholder="数据源字符集(utf8)"
-          />
+          <n-input v-model:value="model.charset" placeholder="数据源字符集(utf8)" />
+        </n-form-item>
+        <n-form-item label="状态" path="status">
+          <n-switch v-model:value="model.status" />
         </n-form-item>
       </n-form>
     </div>
     <template #action>
       <n-flex justify="end">
-        <n-button @click="handleTestConn" v-show="model.id">测试连接</n-button>
-        <n-button @click="close">取消</n-button>
-        <n-button @click="handleSubmit">确定</n-button>
+        <n-button @click="handleTestConn" ghost size="small" v-show="model.id">测试连接</n-button>
+        <n-button @click="close" ghost size="small">取消</n-button>
+        <n-button @click="handleSubmit" ghost size="small">确定</n-button>
       </n-flex>
     </template>
   </n-modal>
@@ -106,6 +87,7 @@ const handleSubmit = async () => {
   }
   if (res && res.code == 200) {
     window["$message"].success(res.msg);
+    emit("fresh");
     setTimeout(() => {
       close();
     });

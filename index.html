@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebSocket Example</title>
+</head>
+<body>
+  <script>
+    let ws;
+    let reconnectInterval;
+
+    function connectWebSocket() {
+      ws = new WebSocket('ws://127.0.0.1:3000');
+
+      ws.onopen = function() {
+        console.log('Connected to WebSocket server');
+
+        // 发送消息到WebSocket服务器
+        const message = JSON.stringify({
+          type: 'subscribe',
+          channel: 'channel1'
+        });
+        ws.send(message);
+      };
+
+      ws.onmessage = function(event) {
+        console.log('Received message from WebSocket server:', event.data);
+      };
+
+      ws.onclose = function() {
+        console.log('Disconnected from WebSocket server');
+
+        // 重新连接
+        reconnect();
+      };
+
+      ws.onerror = function(error) {
+        console.error('WebSocket error:', error);
+
+        // 重新连接
+        reconnect();
+      };
+    }
+
+    function reconnect() {
+      clearInterval(reconnectInterval);
+
+      // 延迟重新连接
+      reconnectInterval = setInterval(function() {
+        connectWebSocket();
+      }, 5000);
+    }
+
+    connectWebSocket();
+  </script>
+</body>
+</html>

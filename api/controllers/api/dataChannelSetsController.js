@@ -76,6 +76,7 @@ router.post("/add", verifyToken, async (req, res) => {
     push_cron: req.body.push_cron,
     push_type: req.body.push_type,
     status: req.body.status,
+    user_id: req.user.id,
   };
   try {
     const [id] = await knex(tableNameSets).insert(data);
@@ -95,10 +96,18 @@ router.post("/add", verifyToken, async (req, res) => {
 
 router.post("/edit", verifyToken, async (req, res) => {
   const { id } = req.body;
-  const updateFields = ["name", "push_type", "data_channel_id", "data_set_id" , "push_cron", "status"];
+  const updateFields = {
+    name: req.body.name,
+    data_set_id: req.body.data_set_id,
+    data_channel_id: req.body.data_channel_id,
+    push_cron: req.body.push_cron,
+    push_type: req.body.push_type,
+    status: req.body.status,
+    user_id: req.user.id,
+  };
   const data = await knex(tableNameSets)
     .where("id", id)
-    .update(pick(req.body, updateFields), "*")
+    .update(updateFields)
     .catch((error) => {
       res.json({
         data: null,

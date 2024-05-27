@@ -7,7 +7,10 @@ const dataChannelSetsApiRoutes = require("./api/dataChannelSetsController");
 const dataSetApiRoutes = require("./api/dataSetController");
 
 const router = express.Router();
-
+router.get('/', (req, res) => {
+    res.send('WebSocket Server Running');
+  });
+  
 router.use("/api/auth", authApiRoutes);
 router.use("/api/user", userApiRoutes);
 router.use("/api/dataSource", dataSourceApiRoutes);

@@ -12,13 +12,17 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "express": "^4.19.2",
+    "express-ws": "^5.0.2",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
     "lodash": "^4.17.21",
     "morgan": "^1.10.0",
     "mysql2": "^3.9.7",
     "node-fetch": "^3.3.2",
+    "node-schedule": "^2.1.1",
     "nodemon": "^3.1.0",
-    "sqlite3": "^5.1.7"
+    "schedule": "^0.5.0",
+    "sqlite3": "^5.1.7",
+    "ws": "^8.17.0"
   }
 }

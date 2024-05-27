@@ -36,7 +36,9 @@
       <table-component ref="tableRef" />
     </div>
   </n-card>
-  <add-modal ref="addModalRef" />
+
+  <add-modal ref="addModalRef" @fresh="getDataList" />
+
 </template>
 
 <script setup>

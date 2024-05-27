@@ -189,7 +189,7 @@ router.post("/execute", verifyToken, async (req, res) => {
           );
 
           break;
-        case "pg":
+        case "postgresql":
           result = await executeHelper.executeQueryWithPg(
             {
               host: dataSource.url,

@@ -2,6 +2,8 @@ const knex = require("../config/db");
 const schedule = require('node-schedule');
 const executeHelper = require("./executeHelper");
 
+const dataSetJobs = {}
+
 const generateJobs = async (pushDataToChannel) => {
     const datasets = await knex.table('data_channel_data_sets as a')
         .leftJoin('data_sets as b', 'b.id', 'a.data_set_id')
@@ -13,7 +15,8 @@ const generateJobs = async (pushDataToChannel) => {
             'c.port', 'c.username', 'c.password', 'c.charset', 'c.database', 'c.ext');
 
     for (const dataset of datasets) {
-        schedule.scheduleJob(dataset.push_cron, async function () {
+        if (dataSetJobs[dataset.data_set_id]) dataSetJobs[dataset.data_set_id].cancel(); 
+         dataSetJobs[dataset.data_set_id] = schedule.scheduleJob(dataset.push_cron, async function () {
             console.log(`Pushing data to channel${dataset.data_channel_id}`);
             let result = null;
             switch (dataset.data_source_type) {
@@ -70,4 +73,7 @@ const generateJobs = async (pushDataToChannel) => {
 }
 
 
-module.exports = generateJobs
+module.exports = {
+  generateJobs,
+  schedule
+}

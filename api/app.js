@@ -2,7 +2,10 @@ const express = require('express');
 var morgan = require('morgan');
 const WebSocket = require('ws');
 
-const generateJobs = require('./utils/jobPulgin');
+const {
+  generateJobs,
+  schedule
+} = require('./utils/jobPulgin');
 const { errorHandler } = require('./utils');
 const bodyParser = require("body-parser");
 const routes = require("./controllers/index");
@@ -21,32 +24,9 @@ app.use(bodyParser.json());
 
 
 // 用于存储频道相关的WebSocket客户端
-const clientsByChannel = {};
+const clientsByChannel = {}
 
-// wss.on('connection', (ws) => {
-//   ws.on('message', (message) => {
-//     try {
-//       const data = JSON.parse(message);
-//       if (data.type === 'subscribe' && data.channel) {
-//         if (!clientsByChannel[data.channel]) {
-//           clientsByChannel[data.channel] = new Set();
-//         }
-//         clientsByChannel[data.channel].add(ws);
-//         console.log(`Client subscribed to channel: ${data.channel}`);
-//       }
-//     } catch (error) {
-//       console.error('Error parsing message:', error);
-//     }
-//   });
-
-//   ws.on('close', () => {
-//     for (const channel in clientsByChannel) {
-//       clientsByChannel[channel].delete(ws);
-//     }
-//   });
-// });
-
-app.ws('/', function(ws, req) {
+app.ws('/', function (ws, req) {
   ws.on('message', (message) => {
     try {
       const data = JSON.parse(message);
@@ -84,8 +64,20 @@ generateJobs(pushDataToChannel);
 
 app.use("/", routes);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+app.get('/schedule', async (req, res) => {
+  const { token } = req.query
+  if (token == 'schedule') {
+    await generateJobs(pushDataToChannel);
+    res.send('WebSocket Server Running');
+  } else {
+    res.status(401).json({ message: 'Unauthorized' });
+  }
+});
+
+app.use(errorHandler)
+const config = require('./config/index')
+
+app.listen(config.port, () => {
+  console.log(`Server is running on port ${config.port}`);
 });
 

@@ -80,6 +80,9 @@ router.post("/add", verifyToken, async (req, res) => {
   };
   try {
     const [id] = await knex(tableNameSets).insert(data);
+    //node get请求本服务的/schedule接口，使用node原生http请求
+    await reGenerateJob()
+
     res.json({
       data: id,
       msg: "success",
@@ -115,7 +118,7 @@ router.post("/edit", verifyToken, async (req, res) => {
         code: 500,
       });
     });
-
+  await reGenerateJob()
   res.json({
     data,
     msg: "success",
@@ -142,5 +145,51 @@ router.post("/delete", verifyToken, async (req, res) => {
     });
   }
 });
+
+const reGenerateJob = async () => {
+  const http = require('http');
+  const config = require('../../config/index')
+
+  // 定义请求选项
+  const options = {
+    hostname: 'localhost', // 或者是你的服务器IP地址
+    port: config.port, // 你的Express服务监听的端口
+    path: '/schedule?token=schedule', // 请求的路径
+    method: 'GET', // 请求方法
+    headers: {
+      'Content-Type': 'application/json',
+      // 添加其他需要的头部信息，如认证信息等
+    }
+  };
+
+  // 发起请求
+  const req = http.request(options, (res) => {
+    let data = '';
+
+    // 处理响应数据
+    res.on('data', (chunk) => {
+      data += chunk;
+    });
+
+    // 当所有数据接收完毕
+    res.on('end', () => {
+      try {
+        const response = JSON.parse(data); // 假设响应体是JSON格式
+        console.log('GET /schedule 响应:', response);
+        // 在这里处理响应数据，例如更新任务、取消任务等
+      } catch (error) {
+        console.error('解析响应数据出错:', error);
+      }
+    });
+  });
+
+  // 处理请求过程中可能出现的错误
+  req.on('error', (error) => {
+    console.error(`请求发生错误: ${error.message}`);
+  });
+
+  // 结束请求（对于GET请求，通常不需要写数据）
+  req.end();
+}
 
 module.exports = router;

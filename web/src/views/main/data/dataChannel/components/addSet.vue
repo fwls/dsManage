@@ -1,65 +1,31 @@
 <template>
-  <n-modal
-    v-model:show="showModal"
-    class="custom-card"
-    preset="card"
-    title="频道数据集管理"
-    :bordered="false"
-    :segmented="segmented"
-    style="width: 500px;"
-  >
-    <n-form
-      ref="formRef"
-      :model="formValue"
-      :rules="rules"
-      label-placement="left"
-      label-width="auto"
-      require-mark-placement="right-hanging"
-      :size="`small`"
-      :style="{
+  <n-modal v-model:show="showModal" class="custom-card" preset="card" title="频道数据集管理" :bordered="false"
+    :segmented="segmented" style="width: 500px;">
+    <n-form ref="formRef" :model="formValue" :rules="rules" label-placement="left" label-width="auto"
+      require-mark-placement="right-hanging" :size="`small`" :style="{
         maxWidth: '500px',
-      }"
-    >
+      }">
       <n-form-item label="名称" path="name">
-        <n-input
-          v-model:value="formValue.name"
-          placeholder="请选择频道数据集名称"
-        />
+        <n-input v-model:value="formValue.name" placeholder="请选择频道数据集名称" />
       </n-form-item>
       <n-form-item label="数据集" path="data_set_id">
-        <n-select
-          filterable
-          v-model:value="formValue.data_set_id"
-          placeholder="请选择数据集"
-          :options="dataSetOptions"
-        />
+        <n-select filterable v-model:value="formValue.data_set_id" placeholder="请选择数据集" :options="dataSetOptions" />
       </n-form-item>
       <n-form-item label="推送方式" path="push_type">
-        <n-select
-          v-model:value="formValue.push_type"
-          :options="pushTypeOptions"
-          placeholder="请选择频道数据集推送方式"
-        />
+        <n-select v-model:value="formValue.push_type" :options="pushTypeOptions" placeholder="请选择频道数据集推送方式" />
       </n-form-item>
-      <n-form-item label="推送间隔" path="push_cron">
-        <n-input
-          v-model:value="formValue.push_cron"
-          placeholder="请选择频道数据集间隔"
-        />
+      <n-form-item label="推送间隔" path="push_cron" v-show="formValue.push_type == 'websocket'">
+        <n-input v-model:value="formValue.push_cron" placeholder="请选择频道数据集间隔" />
       </n-form-item>
       <n-form-item label="状态" path="status">
-        <n-select
-          v-model:value="formValue.status"
-          :options="statusOptions"
-          placeholder="请选择频道数据集状态"
-        />
+        <n-select v-model:value="formValue.status" :options="statusOptions" placeholder="请选择频道数据集状态" />
       </n-form-item>
     </n-form>
     <template #footer>
       <n-flex justify="end">
-        <n-button attr-type="button" ghost @click="handleTest"> 测试 </n-button>
-        <n-button attr-type="button" ghost @click="close"> 取消 </n-button>
-        <n-button attr-type="button" ghost type="primary" @click="handleValidateButtonClick">
+        <n-button attr-type="button" size="small" ghost @click="handleTest"> 测试 </n-button>
+        <n-button attr-type="button" size="small" ghost @click="close"> 取消 </n-button>
+        <n-button attr-type="button" size="small" ghost type="primary" @click="handleValidateButtonClick">
           确定
         </n-button>
       </n-flex>
@@ -70,7 +36,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from "vue";
+import { ref } from "vue";
 import jsonPreviewResult from "@/views/main/data/components/jsonPreviewResult.vue";
 import {
   getDataSetList,
@@ -85,14 +51,14 @@ const emit = defineEmits(["fresh"]);
 const props = defineProps({
   dataChannel: {
     type: Object,
-    default: () => {},
+    default: () => { },
   },
 });
 
 const formValue = ref({
   push_type: "http",
   status: 1,
-  push_cron: "*/30 * * * *",
+  push_cron: "*/1 * * * *",
   data_channel_id: null,
   data_set_id: null,
   name: "",
@@ -122,7 +88,7 @@ const pushTypeOptions = [
     value: "http",
   },
   {
-    label: "被动(暂不可用)",
+    label: "被动",
     value: "websocket",
   },
 ];
@@ -159,7 +125,7 @@ const handleValidateButtonClick = async (e) => {
         res = await editChannelDataSet(formValue.value);
       } else {
         formValue.value.data_channel_id = currDataChannel.value.id;
-        console.log('currDataChannel',formValue.value, currDataChannel.value)
+        console.log('currDataChannel', formValue.value, currDataChannel.value)
         res = await addChannelDataSet(formValue.value);
       }
       if (res && res.code == 200) {
@@ -184,7 +150,7 @@ const handleTest = async () => {
 };
 
 const getDataSetOptions = async () => {
-  const res = await getDataSetList({status: 1});
+  const res = await getDataSetList({ status: 1 });
   if (res.code == 200) {
     dataSetOptions.value = res.data.map((item) => {
       return {
@@ -206,7 +172,7 @@ const open = async (currDataChannelValue, value) => {
   showModal.value = true;
   currDataChannel.value = currDataChannelValue;
   await getDataSetOptions();
-  if(value){
+  if (value) {
     await getDataSetDetail(value.id);
   }
 };

@@ -4,7 +4,7 @@ const executeHelper = require("./executeHelper");
 
 const dataSetJobs = {}
 
-const generateJobs = async (pushDataToChannel) => {
+const generateJobs = async (pushDataToChannel, WebSocket) => {
     const datasets = await knex.table('data_channel_data_sets as a')
         .leftJoin('data_sets as b', 'b.id', 'a.data_set_id')
         .leftJoin('data_sources as c', 'c.id', 'b.data_source_id')
@@ -13,11 +13,12 @@ const generateJobs = async (pushDataToChannel) => {
             'a.push_cron', 'a.name', 'b.content', 'c.type as data_source_type', 
             'c.name as data_source_name', 'c.id as data_source_id', 'c.url',
             'c.port', 'c.username', 'c.password', 'c.charset', 'c.database', 'c.ext');
-
+   
     for (const dataset of datasets) {
+      // console.log('dataset.data_set_id', dataset.data_set_id, dataset.push_cron)
         if (dataSetJobs[dataset.data_set_id]) dataSetJobs[dataset.data_set_id].cancel(); 
          dataSetJobs[dataset.data_set_id] = schedule.scheduleJob(dataset.push_cron, async function () {
-            console.log(`Pushing data to channel${dataset.data_channel_id}`);
+            // console.log(`Pushing data to channel${dataset.data_channel_id}`);
             let result = null;
             switch (dataset.data_source_type) {
               case "mysql":
@@ -67,7 +68,7 @@ const generateJobs = async (pushDataToChannel) => {
                 });
                 break;
             }
-            pushDataToChannel(`channel${dataset.data_channel_id}`, { message: `Hello from channel${dataset.data_channel_id}`, timestamp: new Date(), result });
+            pushDataToChannel(`channel${dataset.data_channel_id}`, { message: `Hello from channel${dataset.data_channel_id}`, timestamp: new Date(), result }, WebSocket);
         });
     }
 }

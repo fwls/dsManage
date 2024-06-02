@@ -1,12 +1,8 @@
 const express = require('express');
 var morgan = require('morgan');
-const WebSocket = require('ws');
 
-const {
-  generateJobs,
-  schedule
-} = require('./utils/jobPulgin');
-const { errorHandler } = require('./utils');
+const cache = require('./utils/cache')
+const { errorHandler, pushDataToChannel, generateJobs } = require('./utils');
 const bodyParser = require("body-parser");
 const routes = require("./controllers/index");
 
@@ -16,6 +12,8 @@ const app = express();
 // const server = require('http').createServer(app);
 // const wss = new WebSocket.Server({ server });
 
+
+
 var expressWs = require('express-ws')(app);
 
 app.use(morgan('short'));
@@ -24,9 +22,11 @@ app.use(bodyParser.json());
 
 
 // 用于存储频道相关的WebSocket客户端
-const clientsByChannel = {}
+// const clientsByChannel = {}
+cache.set('clientsByChannel', {})
 
 app.ws('/', function (ws, req) {
+  const clientsByChannel = cache.get('clientsByChannel')
   ws.on('message', (message) => {
     try {
       const data = JSON.parse(message);
@@ -50,29 +50,9 @@ app.ws('/', function (ws, req) {
 
 });
 
-function pushDataToChannel(channel, data) {
-  if (clientsByChannel[channel]) {
-    clientsByChannel[channel].forEach((client) => {
-      if (client.readyState === WebSocket.OPEN) {
-        client.send(JSON.stringify(data));
-      }
-    });
-  }
-}
-
 generateJobs(pushDataToChannel);
 
 app.use("/", routes);
-
-app.get('/schedule', async (req, res) => {
-  const { token } = req.query
-  if (token == 'schedule') {
-    await generateJobs(pushDataToChannel);
-    res.send('WebSocket Server Running');
-  } else {
-    res.status(401).json({ message: 'Unauthorized' });
-  }
-});
 
 app.use(errorHandler)
 const config = require('./config/index')

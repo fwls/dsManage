@@ -89,6 +89,20 @@ const columns = [
     key: "name",
   },
   {
+    title: "推送方式",
+    key: "push_type",
+    render(row) {
+      return h(
+        NTag,
+        {
+          type: 'info',
+          size: "small",
+        },
+        { default: () => row.push_type == "http" ?  "主动" : "被动" }
+      );
+    }
+  },
+  {
     title: "状态",
     key: "status",
     width: "120px",

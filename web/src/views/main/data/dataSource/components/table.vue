@@ -19,7 +19,13 @@
       </n-button>
     </div>
   </n-flex>
-  <n-data-table :columns="columns" :data="data" :pagination="pagination" :bordered="false" />
+  <n-data-table :columns="columns" :data="data" :bordered="false" />
+
+  <div style="margin-top: 20px;display: flex; justify-content: end;">
+    <n-pagination :item-count="pagination.itemCount" :page-sizes="pagination.pageSizes"
+      :on-update:page="pagination.onChange" :on-update:page-size="pagination.onUpdatePageSize"
+      show-size-picker />
+  </div>
 
   <add-modal ref="addModalRef" @fresh="getDataList" />
 </template>
@@ -45,6 +51,7 @@ const pagination = reactive({
   page: 1,
   pageSize: 10,
   showSizePicker: true,
+  itemCount: 10,
   pageSizes: [10, 20, 30, 50],
   onChange: async (page) => {
     pagination.page = page;
@@ -69,7 +76,7 @@ const getDataList = async (value) => {
   }
   res = await getDataSourceList(params);
   if (res && res.code == 200) {
-    data.value = [];
+    pagination.itemCount = res.total
     data.value = res.data;
   }
 };

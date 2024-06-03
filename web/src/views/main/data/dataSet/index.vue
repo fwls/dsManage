@@ -33,6 +33,11 @@
         :pagination="pagination"
         :bordered="false"
       />
+
+      <div style="margin-top: 20px;display: flex; justify-content: end;">
+      <n-pagination :item-count="pagination.itemCount" :page-sizes="pagination.pageSizes"
+        :on-update:page="pagination.onChange" :on-update:page-size="pagination.onUpdatePageSize" show-size-picker />
+    </div>
     </n-card>
 
     <jsonPreviewResult :value="jsonValue" ref="jsonPreviewRef" />
@@ -52,6 +57,7 @@ const formValue = ref({ name: "" });
 const pagination = reactive({
   page: 1,
   pageSize: 10,
+  itemCount: 10,
   showSizePicker: true,
   pageSizes: [10, 20, 30, 50],
   onChange: async (page) => {
@@ -202,6 +208,7 @@ const getList = async () => {
   };
   getDataSetList(params).then((res) => {
     if (res) {
+      pagination.itemCount = res.total;
       data.value = res.data;
     }
   });

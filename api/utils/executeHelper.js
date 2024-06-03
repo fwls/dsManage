@@ -38,8 +38,8 @@ async function executeQueryWithMysql(connectionConfig, query) {
     try {
       const [results, fields] = await connection.query(query);
 
-      console.log(results); // results contains rows returned by server
-      console.log(fields); // fields contains extra meta data about results, if available
+      // console.log(results); // results contains rows returned by server
+      // console.log(fields); // fields contains extra meta data about results, if available
       return {
         result: results,
         error: null,
@@ -148,7 +148,7 @@ async function executeCodeInSandbox(code) {
     var result = vm.runInNewContext(code, context);
 
     // 输出结果，注意，由于在沙箱中，`process` 不可访问
-    console.log("script", result);
+    // console.log("script", result);
     return {
       result,
       error: null,

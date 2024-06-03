@@ -1,17 +1,45 @@
 <template>
+  <n-flex>
+    <div class="left">
+      <n-form ref="formRef" inline label-placement="left" label-width="auto" :model="formValue" :size="`small`">
+        <n-form-item label="名称">
+          <n-input v-model:value="formValue.name" placeholder="输入名称" />
+        </n-form-item>
+        <n-form-item label="类型">
+          <n-select v-model:value="formValue.type" :options="options" style="width: 150px" />
+        </n-form-item>
+        <n-form-item>
+          <n-button attr-type="button" ghost @click="handleSearch"> 搜索 </n-button>
+        </n-form-item>
+      </n-form>
+    </div>
+    <div class="right">
+      <n-button attr-type="button" type="primary" ghost size="small" @click="openAddModal">
+        新增
+      </n-button>
+    </div>
+  </n-flex>
   <n-data-table :columns="columns" :data="data" :pagination="pagination" :bordered="false" />
 
   <add-modal ref="addModalRef" @fresh="getDataList" />
 </template>
 
 <script setup>
-import { onMounted, h, reactive, nextTick } from "vue";
+import { onMounted, h, ref, reactive, nextTick } from "vue";
 import { deleteDataSource, testDataSourceConn } from "@/api/dataApi";
 import { useDataSourceHook } from "../hooks/dataSource.hook";
 import { NButton, NTag } from "naive-ui";
+import { getDataSourceList } from "@/api/dataApi";
 import addModal from "./addModal.vue";
 
-const { data, getDataList, addModalRef } = useDataSourceHook();
+const { options } = useDataSourceHook();
+
+const data = ref([])
+const addModalRef = ref(null)
+const formValue = ref({
+  name: "",
+  value: "",
+});
 
 const pagination = reactive({
   page: 1,
@@ -28,6 +56,23 @@ const pagination = reactive({
     await getDataList();
   },
 });
+
+const getDataList = async (value) => {
+  let res = null;
+  const params = {
+    page: pagination.page,
+    pageSize: pagination.pageSize,
+  };
+  if (value) {
+    params.type = value.type;
+    params.name = value.name;
+  }
+  res = await getDataSourceList(params);
+  if (res && res.code == 200) {
+    data.value = [];
+    data.value = res.data;
+  }
+};
 
 const columns = [
   {
@@ -180,6 +225,15 @@ const handleDel = async (row) => {
     },
   });
 };
+
+const handleSearch = async () => {
+  await search(formValue.value);
+};
+
+const openAddModal = () => {
+  addModalRef.value?.open();
+};
+
 
 const search = async (value) => {
   getDataList(value);

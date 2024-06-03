@@ -81,15 +81,15 @@ const handleSubmit = async () => {
   let res = null;
   if (model.value.id) {
     res = await editDataSource(model.value);
-    emit("fresh");
   } else {
     res = await addDataSource(model.value);
   }
   if (res && res.code == 200) {
     window["$message"].success(res.msg);
-    emit("fresh");
     setTimeout(() => {
       close();
+      // window.location.reload();
+      emit("fresh");
     });
   }
 };
@@ -103,12 +103,14 @@ defineExpose({ open, close });
 watch(
   () => model.value.type,
   (newValue) => {
-    if (newValue.includes("javascript")) {
+    if(newValue){
+      if (newValue.includes("javascript")) {
       language.value = "javascript";
     } else if (newValue === "json") {
       language.value = "json";
     } else if (newValue.includes("sql")) {
       language.value = "sql";
+    }
     }
   }
 );

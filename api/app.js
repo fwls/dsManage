@@ -25,7 +25,7 @@ app.use(bodyParser.json());
 // const clientsByChannel = {}
 cache.set('clientsByChannel', {})
 
-app.ws('/', function (ws, req) {
+app.ws('/ws/channel', function (ws, req) {
   const clientsByChannel = cache.get('clientsByChannel')
   ws.on('message', (message) => {
     try {

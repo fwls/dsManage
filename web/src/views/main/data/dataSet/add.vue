@@ -5,9 +5,9 @@
       <n-form-item label="名称" path="name">
         <n-input v-model:value="formValue.name" placeholder="输入数据源名称" />
       </n-form-item>
-      <n-form-item label="类型" path="data_sources_type">
+      <!-- <n-form-item label="类型" path="data_sources_type">
         <n-select v-model:value="formValue.data_sources_type" placeholder="数据源类型" :options="options" />
-      </n-form-item>
+      </n-form-item> -->
 
       <n-form-item label="数据源" path="data_source_id">
         <n-select filterable v-model:value="formValue.data_source_id" :options="dataSourceOptions" />
@@ -109,11 +109,11 @@ const rules = {
     message: "请输入数据集名称",
     trigger: "blur",
   },
-  data_sources_type: {
-    required: true,
-    message: "请输入数据集类型",
-    trigger: "blur",
-  },
+  // data_sources_type: {
+  //   required: true,
+  //   message: "请输入数据集类型",
+  //   trigger: "blur",
+  // },
   data_source_id: {
     required: true,
     message: "请输入数据集所属数据源",

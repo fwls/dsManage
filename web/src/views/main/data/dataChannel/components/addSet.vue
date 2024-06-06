@@ -125,7 +125,6 @@ const handleValidateButtonClick = async (e) => {
         res = await editChannelDataSet(formValue.value);
       } else {
         formValue.value.data_channel_id = currDataChannel.value.id;
-        console.log('currDataChannel', formValue.value, currDataChannel.value)
         res = await addChannelDataSet(formValue.value);
       }
       if (res && res.code == 200) {
@@ -179,6 +178,14 @@ const open = async (currDataChannelValue, value) => {
 
 
 const close = () => {
+  formValue.value = {
+    push_type: "http",
+    status: 1,
+    push_cron: "*/1 * * * *",
+    data_channel_id: null,
+    data_set_id: null,
+    name: "",
+  }
   showModal.value = false;
 };
 

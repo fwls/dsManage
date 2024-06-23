@@ -1,6 +1,7 @@
 <template>
   <div style="">
     <n-config-provider :theme="theme">
+      <n-spin :show="requestLoading">
       <n-layout has-sider style="">
         <n-layout-sider>
           <slideVue />
@@ -17,6 +18,7 @@
           <!-- <n-layout-footer style="bottom: 0;"></n-layout-footer> -->
         </n-layout>
       </n-layout>
+      </n-spin>
     </n-config-provider>
   </div>
 </template>
@@ -26,8 +28,10 @@ import { RouterView } from "vue-router";
 import headerVue from "./header.vue";
 import slideVue from "./slide.vue";
 import { useThemeHook } from "./hooks/theme.hook";
+import { requestLoading } from "@/views/hooks/request.hook";
 
 const { theme } = useThemeHook();
+
 </script>
 
 <style>

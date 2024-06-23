@@ -20,6 +20,6 @@ export const useThemeHook = () => {
     return {
         theme,
         active,
-        handleChange
+        handleChange,
     }
 }

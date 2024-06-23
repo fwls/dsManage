@@ -1,39 +1,42 @@
 <template>
   <div>
-    <n-card>
-      <n-form
-        ref="formRef"
-        inline
-        label-placement="left"
-        label-width="auto"
-        :model="formValue"
-        :size="`small`"
-      >
-        <n-form-item label="名称" path="name">
-          <n-input
-            v-model:value="formValue.name"
-            placeholder="输入数据集名称"
-          />
-        </n-form-item>
-        <n-form-item>
-          <n-button
-            attr-type="button"
-            style="margin-right: 5px"
-            @click="handleSearch"
-          >
-            验证
-          </n-button>
-          <n-button attr-type="button" type="primary" @click="handleAdd"> 新增 </n-button>
-        </n-form-item>
-      </n-form>
 
-      <n-data-table
-        :columns="columns"
-        :data="data"
-        :pagination="pagination"
-        :bordered="false"
-      />
-    </n-card>
+      <n-card>
+        <n-form
+          ref="formRef"
+          inline
+          label-placement="left"
+          label-width="auto"
+          :model="formValue"
+          :size="`small`"
+        >
+          <n-form-item label="名称" path="name">
+            <n-input
+              v-model:value="formValue.name"
+              placeholder="输入数据集名称"
+            />
+          </n-form-item>
+          <n-form-item>
+            <n-button
+              attr-type="button"
+              style="margin-right: 5px"
+              @click="handleSearch"
+            >
+              验证
+            </n-button>
+            <n-button attr-type="button" type="primary" @click="handleAdd">
+              新增
+            </n-button>
+          </n-form-item>
+        </n-form>
+
+        <n-data-table
+          :columns="columns"
+          :data="data"
+          :pagination="pagination"
+          :bordered="false"
+        />
+      </n-card>
 
     <jsonPreviewResult :value="jsonValue" ref="jsonPreviewRef" />
   </div>
@@ -47,7 +50,7 @@ import { getDataSetList, testDataSet } from "@/api/dataApi";
 import jsonPreviewResult from "@/views/main/data/components/jsonPreviewResult.vue";
 
 const router = useRouter();
-
+const showLoading = ref(false);
 const formValue = ref({ name: "" });
 const pagination = reactive({
   page: 1,

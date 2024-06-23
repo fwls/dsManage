@@ -27,7 +27,7 @@ router.get("/list", verifyToken, async (req, res) => {
     }
     const dataSources = await query
       .whereNull("deleted_at")
-      .offset((req.query.page || 1) - 1)
+      .offset(((req.query.page || 1) - 1) * req.query.pageSize)
       .limit(req.query.pageSize || 10);
     const totalCount = await knex("data_sources")
       .whereNull("deleted_at")

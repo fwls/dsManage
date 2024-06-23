@@ -9,7 +9,7 @@
     let reconnectInterval;
 
     function connectWebSocket() {
-      ws = new WebSocket('ws://127.0.0.1:3000');
+      ws = new WebSocket('ws://127.0.0.1:3000/ws/channel');
 
       ws.onopen = function() {
         console.log('Connected to WebSocket server');
@@ -17,7 +17,7 @@
         // 发送消息到WebSocket服务器
         const message = JSON.stringify({
           type: 'subscribe',
-          channel: 'channel1'
+          channel: 'channel2'
         });
         ws.send(message);
       };

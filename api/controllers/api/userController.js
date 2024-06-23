@@ -3,7 +3,6 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const { verifyToken } = require("../../utils/index");
 const knex = require("../../config/db");
-const { route } = require("./authController");
 
 const tableName = "users"
 
@@ -20,7 +19,7 @@ router.get("/list", verifyToken, async (req, res) => {
 
     const results = await query
       .whereNull("deleted_at")
-      .offset((req.query.page || 1) - 1)
+      .offset(((req.query.page || 1) - 1) * req.query.pageSize)
       .limit(req.query.pageSize || 10);
     const totalCount = await knex(tableName)
       .whereNull("deleted_at")

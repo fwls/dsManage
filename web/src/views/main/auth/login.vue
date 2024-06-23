@@ -53,8 +53,8 @@ const { userInfo } = storeToRefs(useSystemSettingStore());
 const router = useRouter();
 
 const model = ref({
-  username: "admin",
-  password: "123456",
+  username: "",
+  password: "",
 });
 
 const handleLogin = async () => {

@@ -1,20 +1,7 @@
 <template>
-  <n-modal
-    v-model:show="showModal"
-    class="custom-card"
-    preset="card"
-    title="频道数据集"
-    :bordered="false"
-    :segmented="segmented"
-    style="width: 56vw; min-height: 75vh;"
-  >
-    <n-form
-      ref="formRef"
-      inline
-      label-placement="left"
-      :model="formValue"
-      :size="`small`"
-    >
+  <n-modal v-model:show="showModal" class="custom-card" preset="card" title="频道数据集" :bordered="false"
+    :segmented="segmented" style="width: 56vw; min-height: 75vh;">
+    <n-form ref="formRef" inline label-placement="left" :model="formValue" :size="`small`">
       <n-form-item label="名称" path="name">
         <n-input v-model:value="formValue.name" placeholder="输入名称" />
       </n-form-item>
@@ -28,13 +15,12 @@
       </n-form-item>
     </n-form>
 
-    <n-data-table
-      :columns="columns"
-      :data="data"
-      size="small"
-      :pagination="pagination"
-      :bordered="false"
-    />
+    <n-data-table :columns="columns" :data="data" size="small" :bordered="false" />
+
+    <div style="margin-top: 20px;display: flex; justify-content: end;">
+      <n-pagination :item-count="pagination.itemCount" :page-sizes="pagination.pageSizes"
+        :on-update:page="pagination.onChange" :on-update:page-size="pagination.onUpdatePageSize" show-size-picker />
+    </div>
 
     <template #footer>
       <n-flex justify="end">
@@ -66,6 +52,7 @@ const jsonValue = ref({});
 const pagination = reactive({
   page: 1,
   pageSize: 10,
+  itemCount: 10,
   showSizePicker: true,
   pageSizes: [10, 20, 30, 50],
   onChange: async (page) => {
@@ -87,6 +74,20 @@ const columns = [
   {
     title: "名称",
     key: "name",
+  },
+  {
+    title: "推送方式",
+    key: "push_type",
+    render(row) {
+      return h(
+        NTag,
+        {
+          type: 'info',
+          size: "small",
+        },
+        { default: () => row.push_type == "http" ? "主动" : "被动" }
+      );
+    }
   },
   {
     title: "状态",
@@ -113,7 +114,7 @@ const columns = [
     key: "actions",
     width: "220px",
     render(row) {
-      const test =  h(
+      const test = h(
         NButton,
         {
           strong: true,
@@ -125,7 +126,7 @@ const columns = [
         },
         { default: () => "测试" }
       );
-      const edit =  h(
+      const edit = h(
         NButton,
         {
           strong: true,
@@ -137,7 +138,7 @@ const columns = [
         },
         { default: () => "编辑" }
       );
-      const del =  h(
+      const del = h(
         NButton,
         {
           strong: true,
@@ -150,10 +151,12 @@ const columns = [
         { default: () => "删除" }
       );
       return h(
-        "div",{ style: {
+        "div", {
+        style: {
           display: "flex",
           justContent: "space-between",
-        }}, [test, edit , del]
+        }
+      }, [test, edit, del]
       )
 
     },
@@ -171,12 +174,13 @@ const getDataList = async () => {
   }
   const res = await getChannelDataSetList(params);
   if (res.code == 200) {
+    pagination.itemCount = res.total
     data.value = res.data;
   }
 };
 
 const handleTest = async (row) => {
-  const res = await testDataSet({id: row.data_set_id});
+  const res = await testDataSet({ id: row.data_set_id });
   if (res && res.code == 200) {
     jsonValue.value = res.data;
     jsonPreviewRef.value.open();

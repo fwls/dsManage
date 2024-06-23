@@ -1,5 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { secret } = require('../config/jwtConfig');
+const cache = require('./cache')
+const { generateJobs } = require('./jobPulgin');
+const WebSocket = require('ws');
 
 const verifyToken = async (req, res, next) => {
     const token = req.headers['authorization'];
@@ -29,8 +32,21 @@ const errorHandler = async (err, req, res, next) => {
     });
 }
 
+async function pushDataToChannel(channel, data) {
+    const clientsByChannel = cache.get('clientsByChannel')
+    if (clientsByChannel[channel]) {
+        clientsByChannel[channel].forEach((client) => {
+            if (client.readyState === WebSocket.OPEN) {
+                client.send(JSON.stringify(data));
+            }
+        });
+    }
+}
+
 
 module.exports = {
     verifyToken,
-    errorHandler
+    errorHandler,
+    pushDataToChannel,
+    generateJobs
 }

@@ -149,7 +149,7 @@ const handleTest = async () => {
 };
 
 const getDataSetOptions = async () => {
-  const res = await getDataSetList({ status: 1 });
+  const res = await getDataSetList({ status: 1, pageSize: 9999, page: 1 });
   if (res.code == 200) {
     dataSetOptions.value = res.data.map((item) => {
       return {

@@ -19,7 +19,7 @@
     "pinia-plugin-persistedstate": "^3.2.1",
     "pnpm": "^9.1.2",
     "sql-formatter": "^15.3.1",
-    "vue": "^3.4.21",
+    "vue": "^3.5.13",
     "vue-monaco": "^1.2.2",
     "vue-router": "^4.3.0"
   },

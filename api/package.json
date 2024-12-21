@@ -11,7 +11,8 @@
     "seed": "knex seed:run"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.7.0",
     "express": "^4.19.2",
     "express-ws": "^5.0.2",
     "forever": "^4.0.3",
@@ -25,7 +26,6 @@
     "node-schedule": "^2.1.1",
     "nodemon": "^3.1.0",
     "schedule": "^0.5.0",
-    "sqlite3": "^5.1.7",
     "ws": "^8.17.0"
   }
 }

@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 exports.seed = function (knex) {
   // Deletes ALL existing entries

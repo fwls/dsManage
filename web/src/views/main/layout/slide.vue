@@ -79,6 +79,7 @@ const menuOptions = [
             {
               to: {
                 name: "dataSet",
+                params: {},
               },
             },
             { default: () => "数据集" }
@@ -93,6 +94,8 @@ const menuOptions = [
             {
               to: {
                 name: "dataChannel",
+                params: {},
+              
               },
             },
             { default: () => "数据频道" }
@@ -129,8 +132,8 @@ const menuOptions = [
 
 
 const handleUpdateValue = (key, item) => {
-  // message.info("[onUpdate:value]: " + JSON.stringify(key));
-  // message.info("[onUpdate:value]: " + JSON.stringify(item));
+  // console.log("[onUpdate:value]: " + JSON.stringify(key));
+  // console.log("[onUpdate:value]: " + JSON.stringify(item));
 };
 </script>
 

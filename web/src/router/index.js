@@ -3,7 +3,7 @@ import mainDashboard from "@/views/main/dashboard/index.vue";
 import mainLayout from "@/views/main/layout/index.vue";
 import { useRouter, useRoute } from "vue-router";
 
-const vrouter = useRouter();
+// const router = useRouter();
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -41,22 +41,22 @@ const router = createRouter({
         {
           path: "data/dataSource",
           name: "dataSource",
-          component: () => import("@/views/main/data/dataSource/index.vue"),
+          component: () => import("../views/main/data/dataSource/index.vue"),
         },
         {
           path: "data/dataSet",
           name: "dataSet",
-          component: () => import("@/views/main/data/dataSet/index.vue"),
+          component: () => import("../views/main/data/dataSet/index.vue"),
         },
         {
           path: "data/dataSet/add",
           name: "dataSetAdd",
-          component: () => import("@/views/main/data/dataSet/add.vue"),
+          component: () => import("../views/main/data/dataSet/add.vue"),
         },
         {
           path: "data/dataChannel",
           name: "dataChannel",
-          component: () => import("@/views/main/data/dataChannel/index.vue"),
+          component: () => import("../views/main/data/dataChannel/index.vue"),
         },
         {
           path: "system",
@@ -66,7 +66,7 @@ const router = createRouter({
             {
               path: "user",
               name: "systemUser",
-              component: () => import("@/views/main/system/user/index.vue"),
+              component: () => import("../views/main/system/user/index.vue"),
             }
           ]
         },

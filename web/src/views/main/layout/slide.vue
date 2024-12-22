@@ -53,12 +53,15 @@ const menuOptions = [
     },
   },
 
+  // {
+  //   label: "数据",
+  //   key: "dataIndex",
+  //   icon: renderIcon(BarChartIcon),
+  //   children: [
+      
+  //   ],
+  // },
   {
-    label: "数据",
-    key: "dataIndex",
-    icon: renderIcon(BarChartIcon),
-    children: [
-      {
         label: () =>
           h(
             RouterLink,
@@ -72,7 +75,7 @@ const menuOptions = [
         key: "go-data-source",
         icon: renderIcon(BookmarksOutlineIcon),
       },
-      {
+  {
         label: () =>
           h(
             RouterLink,
@@ -87,7 +90,7 @@ const menuOptions = [
         key: "go-data-set",
         icon: renderIcon(BookOutlineIcon),
       },
-      {
+  {
         label: () =>
           h(
             RouterLink,
@@ -103,8 +106,6 @@ const menuOptions = [
         key: "go-data-channel",
         icon: renderIcon(DesktopOutlineIcon),
       },
-    ],
-  },
   {
     label: "系统管理",
     key: "system",

@@ -21,7 +21,7 @@
             style="margin-right: 5px"
             @click="handleSearch"
           >
-            验证
+            搜索
           </n-button>
           <n-button attr-type="button" type="primary" @click="handleAdd">
             新增

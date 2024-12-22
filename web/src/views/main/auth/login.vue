@@ -46,7 +46,7 @@ const handleLogin = async () => {
     window["$message"].success("登录成功");
     localStorage.setItem("token", res.token);
     userInfo.value = res.data;
-    router.push({ name: "mainDashboardIndex" });
+    router.push({ name: "dataSource" });
   }
 };
 </script>

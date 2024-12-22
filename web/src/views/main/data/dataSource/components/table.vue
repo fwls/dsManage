@@ -6,7 +6,7 @@
           <n-input v-model:value="formValue.name" placeholder="输入名称" />
         </n-form-item>
         <n-form-item label="类型">
-          <n-select v-model:value="formValue.type" :options="options" style="width: 150px" />
+          <n-select v-model:value="formValue.type" :options="options" placeholder="请选择数据源类型" style="width: 150px" />
         </n-form-item>
         <n-form-item>
           <n-button attr-type="button" ghost @click="handleSearch"> 搜索 </n-button>

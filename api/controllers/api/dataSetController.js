@@ -159,7 +159,7 @@ router.post("/delete", verifyToken, async (req, res) => {
   }
 });
 
-router.post("/execute", verifyToken, async (req, res) => {
+router.post("/execute",  async (req, res) => {
   try {
     let dataSet = {};
     const { id } = req.body;

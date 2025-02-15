@@ -103,14 +103,16 @@ defineExpose({ open, close });
 watch(
   () => model.value.type,
   (newValue) => {
-    if(newValue){
+    if (newValue) {
       if (newValue.includes("javascript")) {
-      language.value = "javascript";
-    } else if (newValue === "json") {
-      language.value = "json";
-    } else if (newValue.includes("sql")) {
-      language.value = "sql";
-    }
+        language.value = "javascript";
+      } else if (newValue === "json") {
+        language.value = "json";
+      } else if (newValue.includes("sql")) {
+        language.value = "sql";
+      } else if (newValue == 'kingbaseEs') {
+        language.value = "sql";
+      }
     }
   }
 );

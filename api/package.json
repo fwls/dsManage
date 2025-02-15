@@ -25,6 +25,7 @@
     "node-fetch": "^3.3.2",
     "node-schedule": "^2.1.1",
     "nodemon": "^3.1.0",
+    "pg": "^8.13.3",
     "schedule": "^0.5.0",
     "ws": "^8.17.0"
   }

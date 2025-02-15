@@ -21,6 +21,10 @@ export const useDataSourceHook = () => {
       label: "postgresql",
       value: "postgresql",
     },
+    {
+      label: "kingbaseEs",
+      value: "kingbaseEs",
+    },
   ];
 
 

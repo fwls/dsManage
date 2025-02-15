@@ -158,6 +158,7 @@ router.post("/testConnstatus", verifyToken, async (req, res) => {
   try {
     const { id } = req.body;
     const datasource = await knex("data_sources").where("id", id).first();
+
     if (datasource) {
       if (datasource.type.includes('javascript')) {
         await knex("data_sources").where("id", id).update({
@@ -201,19 +202,23 @@ router.post("/testConnstatus", verifyToken, async (req, res) => {
             });
           }
         });
-      } else if (datasource.type.includes('postgresql')) {
-        const pg = require('pg');
+      } else if (datasource.type.includes('postgresql') || datasource.type == 'kingbaseEs') {
+        const { Pool } = require('pg');
 
-        const client = pg.connect({
+        const config =  {
           host: datasource.url,
           user: datasource.username,
           password: datasource.password,
           database: datasource.database,
           port: datasource.port,
-        });
+        };
+
+        const pool = new Pool(config);
+
+        // const client = await pool.connect();
 
         // 连接到PostgreSQL数据库
-        client.connect(async (err) => {
+        pool.connect(async (err) => {
           if (err) {
             await knex("data_sources").where("id", id).update({
               conn_status: 0
@@ -233,6 +238,13 @@ router.post("/testConnstatus", verifyToken, async (req, res) => {
               code: 200,
             });
           }
+        });
+      } else {
+        console.log(datasource.type)
+        res.json({
+          data: null,
+          msg: "数据源不存在",
+          code: 500,
         });
       }
     }

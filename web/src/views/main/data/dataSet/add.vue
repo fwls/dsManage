@@ -218,6 +218,8 @@ watch(
       language.value = "json";
     } else if (newValue.includes("sql")) {
       language.value = "sql";
+    } else if (newValue == 'kingbaseEs') {
+      language.value = "sql";
     }
   }
 );

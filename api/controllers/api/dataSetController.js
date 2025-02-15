@@ -202,6 +202,19 @@ router.post("/execute",  async (req, res) => {
           );
 
           break;
+        case "kingbaseEs":
+            result = await executeHelper.executeQueryWithPg(
+              {
+                host: dataSource.url,
+                user: dataSource.username,
+                password: dataSource.password,
+                database: dataSource.database,
+                port: dataSource.port,
+              },
+              dataSet.content
+            );
+  
+            break;
         case "javascript(vm)":
           result = await executeHelper.executeCodeInSandbox(dataSet.content);
           if (result.error != null) {

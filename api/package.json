@@ -2,6 +2,7 @@
   "name": "express-jwt-knex-example",
   "version": "1.0.0",
   "main": "app.js",
+  "license": "MIT",
   "scripts": {
     "start": "forever start app.js",
     "stop": "forever stop app.js",
